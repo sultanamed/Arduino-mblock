@@ -1,16 +1,20 @@
 # Ders 01: Blink (Göz Kırpan LED) 💡
 
-Bu ilk dersimizde, Arduino'nun "Hello World"ü kabul edilen **Blink** projesini gerçekleştireceğiz. Amacımız, Arduino üzerindeki dahili LED'i veya harici bir LED'i 1 saniye arayla yakıp söndürmektir.
+Çocukların mantıksal düşünme, problem çözme ve temel algoritma becerilerini geliştiren harika bir başlangıç projesiyle tanışın! Robotist’in Blink uygulaması, robotik kodlama dünyasına adım atarken elektrik devresi kurmayı ve donanımı kontrol etmeyi eğlenceli bir şekilde öğretiyor.
+
+Bu projeyle çocuklar; döngü mantığını, bekleme sürelerini ve elektrik akımının nasıl çalıştığını keşfeder. Kendi elleriyle kurdukları devrede bir ışığın yanıp sönmesini izlemek, onların özgüvenini artırırken üreten bir nesil olma yolunda ilk kıvılcımı ateşler!
+
+**Robotist ile keşfet, öğren, eğlen!**
 
 ---
 
 ## ⚙️ Gerekli Elemanlar
 
-1. **Arduino Uno** (veya uyumlu bir kart)
-2. **Breadboard** (Ekmek tahtası)
-3. **1x LED** (Herhangi bir renk)
-4. **1x 220Ω Direnç** (LED'in zarar görmesini engellemek için)
-5. **Jumper Kablolar**
+1. **Arduino Uno** (Zekamızı temsil eden kontrol kartı)
+2. **Breadboard** (Devremizi kuracağımız delikli tahta)
+3. **1x LED** (Işık saçan eleman)
+4. **1x 220Ω Direnç** (LED'imizi fazla akımdan koruyan koruyucu)
+5. **Jumper Kablolar** (Elektriği taşıyan yollarımız)
 
 ---
 
@@ -27,11 +31,11 @@ LED'lerin uzun bacağı **Anot (+)**, kısa bacağı **Katot (-)** kutbudur.
 
 ## 🧩 mBlock Blok Kodları
 
-mBlock 5 kullanarak projeyi bloklarla kodlamak isterseniz, aşağıdaki yapıyı kurabilirsiniz:
+mBlock 5 kullanarak kodlarımızı görsel bloklarla kolayca oluşturuyoruz. Bu sayede çocuklar kod yazmadan önce mantıksal sıralamayı öğrenir:
 
-*   **Tetikleyici:** `Arduino Uno başladığında` (when Arduino Uno starts up)
-*   **Döngü:** `sürekli tekrarla` (forever)
-*   **İşlem:** Dijital pin 13'ü YÜKSEK (HIGH) yap -> 1 saniye bekle -> Dijital pin 13'ü DÜŞÜK (LOW) yap -> 1 saniye bekle.
+*   **Tetikleyici:** `Arduino Uno başladığında` bloğu ile kartımıza enerjiyi veriyoruz.
+*   **Döngü:** `sürekli tekrarla` bloğu ile LED'in durmadan göz kırpmasını sağlıyoruz.
+*   **İşlem:** Dijital pin 13'ü YÜKSEK (yak) yap -> 1 saniye bekle -> Dijital pin 13'ü DÜŞÜK (söndür) yap -> 1 saniye bekle.
 
 ![mBlock Blokları](./images/mblock.jpg)
 
@@ -39,7 +43,7 @@ mBlock 5 kullanarak projeyi bloklarla kodlamak isterseniz, aşağıdaki yapıyı
 
 ## 💻 Arduino C/C++ Kodları
 
-Projenin Arduino IDE ile yüklenebilecek C/C++ kodları aşağıdaki gibidir:
+Projenin Arduino IDE ile yüklenebilecek geleneksel metin tabanlı C/C++ kodları:
 
 ```cpp
 /*
@@ -53,9 +57,9 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(ledPin, HIGH); // LED'i yak
+  digitalWrite(ledPin, HIGH); // LED'i yak (5V ver)
   delay(1000);                // 1 saniye bekle
-  digitalWrite(ledPin, LOW);  // LED'i söndür
+  digitalWrite(ledPin, LOW);  // LED'i söndür (0V ver)
   delay(1000);                // 1 saniye bekle
 }
 ```
