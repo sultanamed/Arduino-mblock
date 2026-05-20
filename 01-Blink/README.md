@@ -21,7 +21,7 @@ LED'lerin uzun bacağı **Anot (+)**, kısa bacağı **Katot (-)** kutbudur.
 *   LED'in katot (-) bacağını 220Ω direnç üzerinden GND'ye bağlayın.
 *   LED'in anot (+) bacağını ise Arduino'nun **13 numaralı dijital pinine** bağlayın.
 
-![Devre Şeması](./images/schematic.png)
+![Devre Şeması](./images/schematic.jpg)
 
 ---
 
@@ -33,7 +33,7 @@ mBlock 5 kullanarak projeyi bloklarla kodlamak isterseniz, aşağıdaki yapıyı
 *   **Döngü:** `sürekli tekrarla` (forever)
 *   **İşlem:** Dijital pin 13'ü YÜKSEK (HIGH) yap -> 1 saniye bekle -> Dijital pin 13'ü DÜŞÜK (LOW) yap -> 1 saniye bekle.
 
-![mBlock Blokları](./images/mblock.png)
+![mBlock Blokları](./images/mblock.jpg)
 
 ---
 

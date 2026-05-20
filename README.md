@@ -10,7 +10,8 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 
 | Ders No | Proje / Konu Adı | Zorluk Derecesi | Bağlantılar |
 | :---: | :--- | :---: | :---: |
-| **01** | [Blink (Göz Kırpan LED)](#ders-01-blink-göz-kırpan-led) | 🟢 Başlangıç | [İncele](./01-Blink) |
+| **01** | [Blink (Göz Kırpan LED)](./01-Blink) | 🟢 Başlangıç | [İncele](./01-Blink) |
+| **02** | [Trafik Lambası](./02-Trafik_Lambasi) | 🟢 Başlangıç | [İncele](./02-Trafik_Lambasi) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 
