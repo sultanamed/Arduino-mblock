@@ -14,6 +14,7 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 | **02** | [Trafik Lambası](./02-Trafik_Lambasi) | 🟢 Başlangıç | [İncele](./02-Trafik_Lambasi) |
 | **03** | [Blink Buzzer (Flaşör Buzzer)](./03-Blink_Buzzer) | 🟢 Başlangıç | [İncele](./03-Blink_Buzzer) |
 | **04** | [RGB LED](./04-RGB_Led) | 🟢 Başlangıç | [İncele](./04-RGB_Led) |
+| **05** | [Yürüyen Işık Devresi](./05-Yuruyen_Isik) | 🟢 Başlangıç | [İncele](./05-Yuruyen_Isik) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 
