@@ -15,6 +15,11 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 | **03** | [Blink Buzzer (Flaşör Buzzer)](./03-Blink_Buzzer) | 🟢 Başlangıç | [İncele](./03-Blink_Buzzer) |
 | **04** | [RGB LED](./04-RGB_Led) | 🟢 Başlangıç | [İncele](./04-RGB_Led) |
 | **05** | [Yürüyen Işık Devresi](./05-Yuruyen_Isik) | 🟢 Başlangıç | [İncele](./05-Yuruyen_Isik) |
+| **06** | [PWM Sinyali ile LED Parlaklığı Ayarlama](./06-PWM_Led) | 🟢 Başlangıç | [İncele](./06-PWM_Led) |
+| **07** | [Potansiyometre ile LED Parlaklığı Ayarlama](./07-Potansiyometre_LED) | 🟢 Başlangıç | [İncele](./07-Potansiyometre_LED) |
+| **08** | [mBlock ile Değişken Oluşturma](./08-Degisken_Olusturma) | 🟢 Başlangıç | [İncele](./08-Degisken_Olusturma) |
+| **09** | [Potansiyometre ile Flip Flop Devresi](./09-Potansiyometre_Flip_Flop) | 🟢 Başlangıç | [İncele](./09-Potansiyometre_Flip_Flop) |
+| **10** | [Bir Buton ile LED Yakma Söndürme](./10-Buton_Toggle_LED) | 🟢 Başlangıç | [İncele](./10-Buton_Toggle_LED) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 
