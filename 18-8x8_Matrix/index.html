@@ -3,1633 +3,1045 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROBOTIST 8x8 LED Matris Pro Stüdyo</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
+    <title>ROBOTIST - Arduino 8x8 LED Matris Gelişmiş Tasarımcı ve Simülatörü</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #151f32;
-            --border-color: #22314d;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #ef4444;
-            --accent-hover: #dc2626;
-            --accent-glow: rgba(239, 68, 68, 0.4);
-            --led-on: #ff4a4a;
-            --led-off: #2d3748;
-            --success: #10b981;
+        .led-grid {
+            grid-template-columns: repeat(8, minmax(0, 1fr));
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        /* Header Styles */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .logo-section h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(to right, #ff7e5f, #feb47b, var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo-section p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-        }
-
-        .badge {
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .header-links a {
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .header-links a:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        /* Banner section */
-        .intro-banner {
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px dashed var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .intro-text h3 {
-            color: #feb47b;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .intro-text p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .visit-btn {
-            background-color: transparent;
-            border: 1px solid var(--text-secondary);
-            color: var(--text-primary);
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .visit-btn:hover {
-            background-color: var(--text-primary);
-            color: var(--bg-primary);
-            border-color: var(--text-primary);
-        }
-
-        /* Main Content Layout */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 1.5rem;
-            align-items: start;
-        }
-
-        @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Cards and Panels */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        /* Pin Configuration */
-        .pin-settings {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .pin-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0.75rem;
-            background-color: var(--bg-secondary);
-            border-radius: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .pin-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .pin-value-fixed {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #fbbf24;
-        }
-
-        .pin-select {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.375rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* Mode Selector Tabs */
-        .tabs {
-            display: flex;
-            background-color: var(--bg-secondary);
-            border-radius: 0.5rem;
-            padding: 0.25rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn.active {
-            background-color: var(--accent-color);
-            color: white;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
-        }
-
-        /* Mode Contents */
-        .mode-content {
-            display: none;
-        }
-
-        .mode-content.active {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .input-group label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .input-field {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .input-field:focus {
-            border-color: var(--accent-color);
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            user-select: none;
-        }
-
-        .checkbox-container input {
-            cursor: pointer;
-        }
-
-        /* Studio Work Area */
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Matrix Simulator */
-        .matrix-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 1.5rem;
-        }
-
-        .matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 8px;
-            background-color: #111827;
-            padding: 12px;
-            border-radius: 0.75rem;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
-            width: 320px;
-            height: 320px;
-        }
-
-        .led {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background-color: var(--led-off);
-            cursor: pointer;
+        .led-lamp {
+            aspect-ratio: 1;
             transition: all 0.15s ease;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
-
-        .led.active {
-            background-color: var(--led-on);
-            box-shadow: 0 0 12px var(--accent-color), inset 0 1px 3px rgba(255, 255, 255, 0.5);
-        }
-
-        .matrix-meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Timeline / Frames Controls */
-        .btn-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            width: 100%;
-        }
-
-        .btn {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-        }
-
-        .btn:hover {
-            background-color: var(--border-color);
-        }
-
-        .btn-accent {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-accent:hover {
-            background-color: var(--accent-hover);
-        }
-
-        /* Timeline Strip */
-        .timeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            width: 100%;
-        }
-
-        .timeline-title {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .timeline-scroll {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding: 0.5rem 0;
-            min-height: 80px;
-            background-color: rgba(15, 23, 42, 0.5);
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .timeline-frame {
-            position: relative;
-            flex: 0 0 60px;
-            height: 60px;
-            border: 1px solid var(--border-color);
-            border-radius: 0.375rem;
-            background-color: #111827;
-            cursor: pointer;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 1px;
-        }
-
-        .timeline-frame.active {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 8px var(--accent-glow);
-        }
-
-        .timeline-frame-mini-led {
-            background-color: var(--led-off);
-            border-radius: 50%;
-        }
-
-        .timeline-frame-mini-led.active {
-            background-color: var(--accent-color);
-        }
-
-        .timeline-frame-label {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            font-size: 0.6rem;
-            padding: 1px 3px;
-            border-radius: 2px;
-        }
-
-        .frame-delete-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
+        .led-active {
             background-color: #ef4444;
-            color: white;
-            border: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            font-size: 10px;
-            line-height: 16px;
-            text-align: center;
-            cursor: pointer;
-            display: none;
+            color: #ffffff;
+            box-shadow: 0 0 14px #f87171, 0 0 4px #ef4444 inset;
+            border-color: #f87171;
         }
-
-        .timeline-frame:hover .frame-delete-btn {
-            display: block;
+        .led-inactive {
+            background-color: #1f2937;
+            color: #4b5563;
+            box-shadow: 0 0 2px #111827 inset;
+            border-color: #374151;
         }
-
-        /* Preset/Template Library */
-        .preset-library {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            height: 100%;
-        }
-
-        .preset-tabs {
-            display: flex;
-            gap: 0.25rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
-            overflow-x: auto;
-        }
-
-        .preset-tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            cursor: pointer;
-            border-radius: 0.25rem;
-            white-space: nowrap;
-        }
-
-        .preset-tab-btn.active {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-        }
-
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 0.5rem;
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 0.25rem;
-        }
-
-        .preset-item {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .preset-item:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .preset-preview {
-            width: 32px;
-            height: 32px;
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 1px;
-            background-color: #111827;
-            padding: 2px;
-            border-radius: 0.25rem;
-        }
-
-        .preset-preview-led {
-            background-color: var(--led-off);
-            border-radius: 50%;
-        }
-
-        .preset-preview-led.active {
-            background-color: var(--accent-color);
-        }
-
-        .preset-name {
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            text-align: center;
-            word-break: break-word;
-            line-height: 1.1;
-        }
-
-        /* Code display block */
-        .code-container {
-            position: relative;
-            background-color: #0b0f19;
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        .code-header-title {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .code-block-wrapper {
-            position: relative;
-            max-height: 500px;
-            overflow-y: auto;
-            border-radius: 0.5rem;
-        }
-
-        pre code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            color: #d1d5db;
-            white-space: pre;
-            display: block;
-        }
-
-        /* Pin status bar in footer */
-        .pin-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .pin-bar-nodes {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .pin-node {
-            display: flex;
-            gap: 0.25rem;
-            align-items: center;
-        }
-
-        .pin-node span {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--success);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            z-index: 100;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Footer styling */
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 2rem;
-        }
-
-        /* Custom Scrollbars */
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
         }
-
         ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
+            background: #0f172a;
         }
-
         ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
+            background: #334155;
+            border-radius: 3px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
+            background: #475569;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-red-500 selection:text-white">
 
-    <!-- Header Section -->
-    <header>
-        <div class="logo-section">
-            <h1><span>🤖</span> ROBOTIST 8x8 LED Matris Pro Stüdyo</h1>
-            <p>MAX7219 Entegresi & Kütüphanesiz Canlı Kod Sihirbazı | <span style="color:#feb47b;">robotist.fun</span></p>
-        </div>
-        <div>
-            <span class="badge">Ortak Katot Uyumlu</span>
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 shadow-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="https://robotist.fun" target="_blank" class="p-2.5 bg-red-600/20 text-red-500 rounded-xl hover:scale-105 transition duration-200">
+                    <i class="fa-solid fa-robot text-2xl animate-pulse"></i>
+                </a>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide flex items-center gap-2">
+                        ROBOTIST <span class="text-red-500">8x8 LED Matris</span> Pro Stüdyo
+                    </h1>
+                    <p class="text-xs text-slate-400">MAX7219 Entegresi & Kütüphanesiz Canlı Kod Sihirbazı | <a href="https://robotist.fun" target="_blank" class="text-red-400 hover:underline">robotist.fun</a></p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="https://robotist.fun" target="_blank" class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-red-600 to-orange-600 text-white hover:from-red-500 hover:to-orange-500 shadow-lg hover:shadow-red-900/30 transition duration-200">
+                    <i class="fa-solid fa-basket-shopping mr-1.5"></i>
+                    Robotik Kitleri Keşfet
+                </a>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 mr-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                    Ortak Katot Uyumlu
+                </span>
+            </div>
         </div>
     </header>
 
-    <!-- Info Banner -->
-    <div class="intro-banner">
-        <div class="intro-text">
-            <h3>ROBOTIST Robotik Kulübü 🚀</h3>
-            <p>Türkiye'nin en eğlenceli robotik platformu! mBlock, Arduino, 3D Tasarım ve STEM projelerimizle kendi teknolojini üretmeye hazır mısın?</p>
-        </div>
-        <a href="https://robotist.fun" target="_blank" style="text-decoration:none;">
-            <button class="visit-btn">Hemen Ziyaret Et</button>
-        </a>
-    </div>
-
-    <!-- Main Content Layout -->
-    <div class="main-layout">
-        <!-- Sidebar Panel -->
-        <div class="card">
-            <h2 class="card-title">🔌 Pin Bağlantı Ayarları</h2>
-            <div class="pin-settings">
-                <div class="pin-row">
-                    <span class="pin-label">VCC (+5V)</span>
-                    <span class="pin-value-fixed">5V Pini</span>
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Side: Dynamic Pin Selection & Akan Yazı -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- ROBOTIST Banner -->
+            <div class="bg-gradient-to-br from-slate-900 to-red-950/40 border border-red-900/30 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 text-red-950/20 text-8xl font-black pointer-events-none">
+                    FUN
                 </div>
-                <div class="pin-row">
-                    <span class="pin-label">GND (Toprak)</span>
-                    <span class="pin-value-fixed">GND Pini</span>
-                </div>
-                <div class="pin-row">
-                    <span class="pin-label">DIN (Data In)</span>
-                    <select id="din-select" class="pin-select" onchange="updateGenerator()">
-                        <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
-                        <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
-                        <option value="8">D8</option><option value="9">D9</option><option value="10">D10</option>
-                        <option value="11">D11</option><option value="12" selected>D12</option><option value="13">D13</option>
-                    </select>
-                </div>
-                <div class="pin-row">
-                    <span class="pin-label">CS (Load)</span>
-                    <select id="cs-select" class="pin-select" onchange="updateGenerator()">
-                        <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
-                        <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
-                        <option value="8">D8</option><option value="9">D9</option><option value="10" selected>D10</option>
-                        <option value="11">D11</option><option value="12">D12</option><option value="13">D13</option>
-                    </select>
-                </div>
-                <div class="pin-row">
-                    <span class="pin-label">CLK (Clock)</span>
-                    <select id="clk-select" class="pin-select" onchange="updateGenerator()">
-                        <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
-                        <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
-                        <option value="8">D8</option><option value="9">D9</option><option value="10">D10</option>
-                        <option value="11" selected>D11</option><option value="12">D12</option><option value="13">D13</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="tabs">
-                <button id="tab-scrolling" class="tab-btn active" onclick="switchMode('scrolling')">Canlı Akan Yazı Modu</button>
-                <button id="tab-drawing" class="tab-btn" onclick="switchMode('drawing')">Çizim Modu</button>
-            </div>
-
-            <!-- Tab: Scrolling Text Mode -->
-            <div id="mode-scrolling" class="mode-content active">
-                <div class="input-group">
-                    <label for="scrolling-text-input">AKACAK METİN (İngilizce karakterler)</label>
-                    <input type="text" id="scrolling-text-input" class="input-field" value="ROBOTIST.FUN" oninput="updateScrollingText()">
-                </div>
-                <label class="checkbox-container">
-                    <input type="checkbox" id="scrolling-active" checked onchange="toggleScrollingAnimation()">
-                    <span>Akan Yazıyı Aktif Et</span>
-                </label>
-                <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">
-                    * Simülatör ve kod bu ayara göre dinamik olarak güncellenir.
+                <h3 class="text-red-400 font-bold text-lg mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> ROBOTIST Robotik Kulübü
+                </h3>
+                <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+                    Türkiye'nin en eğlenceli robotik platformu! mBlock, Arduino, 3D Tasarım ve STEM projelerimizle kendi teknolojini üretmeye hazır mısın?
                 </p>
+                <a href="https://robotist.fun" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-500 px-3.5 py-2 rounded-xl transition duration-150">
+                    <span>Hemen Ziyaret Et</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
             </div>
 
-            <!-- Tab: Drawing Mode -->
-            <div id="mode-drawing" class="mode-content">
-                <div class="input-group">
-                    <label for="sprite-name-input">Sprite Adı</label>
-                    <input type="text" id="sprite-name-input" class="input-field" value="Benim_Sprite" oninput="updateGenerator()">
-                </div>
-                <div class="input-group">
-                    <label for="speed-select">Hız (Gecikme Süresi)</label>
-                    <select id="speed-select" class="pin-select" style="padding: 0.5rem;" onchange="updateSpeed()">
-                        <option value="100">100ms (Hızlı)</option>
-                        <option value="200">200ms</option>
-                        <option value="300" selected>300ms (Standart)</option>
-                        <option value="500">500ms</option>
-                        <option value="1000">1000ms (Yavaş)</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Work Area Panel -->
-        <div class="card" style="gap: 1.5rem;">
-            <div class="workspace">
-                <!-- LED Matrix Grid Simulator -->
-                <div class="matrix-container">
-                    <div id="matrix-title-label" class="matrix-meta" style="color: #feb47b; font-weight: 600;">Kendin Çiz & Simüle Et</div>
-                    <div id="led-matrix" class="matrix-grid"></div>
-                    <div id="frame-counter" class="matrix-meta">Kare 1/1</div>
-                    <div class="btn-row" style="justify-content: center;">
-                        <button class="btn" onclick="clearMatrix()">Temizle</button>
-                        <button class="btn" onclick="fillMatrix()">Tümünü Yak</button>
+            <!-- Pinout Card with Dynamic Selectors -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <h2 class="text-sm font-bold uppercase tracking-wider mb-4 text-slate-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+                    <i class="fa-solid fa-circle-nodes text-red-500"></i> Pin Bağlantı Ayarları
+                </h2>
+                <div class="space-y-3.5 text-sm">
+                    <!-- VCC (Static) -->
+                    <div class="flex justify-between items-center p-2 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <span class="font-medium text-slate-300">VCC (+5V)</span>
+                        <i class="fa-solid fa-angles-right text-slate-600"></i>
+                        <span class="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-xs font-mono font-bold w-24 text-center">5V Pin</span>
+                    </div>
+                    <!-- GND (Static) -->
+                    <div class="flex justify-between items-center p-2 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <span class="font-medium text-slate-300">GND (Toprak)</span>
+                        <i class="fa-solid fa-angles-right text-slate-600"></i>
+                        <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-400 rounded-lg text-xs font-mono font-bold w-24 text-center">GND Pin</span>
+                    </div>
+                    <!-- DIN (Dynamic) -->
+                    <div class="flex justify-between items-center p-2 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <span class="font-medium text-slate-300">DIN (Data In)</span>
+                        <i class="fa-solid fa-angles-right text-slate-600"></i>
+                        <select id="pin-din" onchange="onPinConfigurationChange()" class="bg-slate-900 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-mono font-bold px-2 py-1 w-24 text-center focus:outline-none focus:border-blue-500">
+                            <!-- Digital Pins 2 to 13 -->
+                            <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
+                            <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
+                            <option value="8">D8</option><option value="9">D9</option><option value="10">D10</option>
+                            <option value="11">D11</option><option value="12" selected>D12</option><option value="13">D13</option>
+                        </select>
+                    </div>
+                    <!-- CS (Dynamic) -->
+                    <div class="flex justify-between items-center p-2 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <span class="font-medium text-slate-300">CS (Load)</span>
+                        <i class="fa-solid fa-angles-right text-slate-600"></i>
+                        <select id="pin-cs" onchange="onPinConfigurationChange()" class="bg-slate-900 text-amber-400 border border-amber-500/20 rounded-lg text-xs font-mono font-bold px-2 py-1 w-24 text-center focus:outline-none focus:border-amber-500">
+                            <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
+                            <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
+                            <option value="8">D8</option><option value="9">D9</option><option value="10" selected>D10</option>
+                            <option value="11">D11</option><option value="12">D12</option><option value="13">D13</option>
+                        </select>
+                    </div>
+                    <!-- CLK (Dynamic) -->
+                    <div class="flex justify-between items-center p-2 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <span class="font-medium text-slate-300">CLK (Clock)</span>
+                        <i class="fa-solid fa-angles-right text-slate-600"></i>
+                        <select id="pin-clk" onchange="onPinConfigurationChange()" class="bg-slate-900 text-purple-400 border border-purple-500/20 rounded-lg text-xs font-mono font-bold px-2 py-1 w-24 text-center focus:outline-none focus:border-purple-500">
+                            <option value="2">D2</option><option value="3">D3</option><option value="4">D4</option>
+                            <option value="5">D5</option><option value="6">D6</option><option value="7">D7</option>
+                            <option value="8">D8</option><option value="9">D9</option><option value="10">D10</option>
+                            <option value="11" selected>D11</option><option value="12">D12</option><option value="13">D13</option>
+                        </select>
                     </div>
                 </div>
+            </div>
 
-                <!-- Custom Drawing / Frame Actions -->
-                <div style="display: flex; flex-direction: column; gap: 1.25rem; justify-content: space-between;">
-                    <div class="timeline-container" id="timeline-controls" style="display:none;">
-                        <span class="timeline-title">Animasyon Zaman Akışı (Timeline)</span>
-                        <div class="btn-row" style="margin-bottom: 0.5rem;">
-                            <button class="btn btn-accent" onclick="addFrame()">Kare Ekle</button>
-                            <button class="btn" id="play-btn" onclick="togglePlayAnimation()">Oynat</button>
-                            <button class="btn" onclick="resetAnimation()">Sıfırla</button>
+            <!-- Akan Yazı (Scroll Text) Control -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <h2 class="text-sm font-bold uppercase tracking-wider mb-4 text-slate-400 flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-paragraph text-red-500"></i> Canlı Akan Yazı Modu
+                    </span>
+                    <span class="text-[10px] bg-red-500/20 text-red-400 font-mono px-1.5 py-0.5 rounded uppercase font-bold" id="mode-badge">Çizim Modu</span>
+                </h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-2">AKACAK METİN (İngilizce karakterler)</label>
+                        <div class="relative">
+                            <input type="text" id="scroll-text-input" value="ROBOTIST.FUN" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-slate-200 focus:outline-none focus:border-red-500 transition font-mono uppercase" placeholder="Yazı yazın...">
+                            <i class="fa-solid fa-keyboard absolute right-3 top-3 text-slate-600"></i>
                         </div>
-                        <div class="timeline-scroll" id="timeline-strip"></div>
                     </div>
 
-                    <!-- Preset Libraries -->
-                    <div class="preset-library">
-                        <span class="timeline-title">50 Farklı Alternatif Şablon</span>
-                        <div class="preset-tabs" id="preset-categories"></div>
-                        <div class="preset-grid" id="preset-items"></div>
+                    <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-300">Akan Yazıyı Aktif Et</span>
+                            <span class="text-[10px] text-slate-500">Simülatör ve kod buna göre güncellenir</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="scroll-mode-toggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                        </label>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- C++ Code Output Area -->
-            <div class="code-container">
-                <div class="code-header">
-                    <div class="code-header-title">
-                        <span>📄</span> Kütüphanesiz Saf C++ Kodu
+        <!-- Center: Interactive Grid & Animator (KENDİN ÇİZ BÖLÜMÜ) -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            <!-- Interactive Matrix Designer -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col items-center">
+                <div class="w-full flex justify-between items-center mb-3">
+                    <span class="text-sm font-bold text-slate-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-palette text-red-500"></i> Kendin Çiz & Simüle Et
+                    </span>
+                    <span class="text-xs bg-red-500/20 text-red-400 font-mono px-2 py-0.5 rounded-full" id="frame-indicator">Kare 1/1</span>
+                </div>
+
+                <!-- Sprite Name Input Box -->
+                <div class="w-full mb-4" id="sprite-name-wrapper">
+                    <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5">
+                        <span class="text-xs font-bold text-slate-400 mr-2 shrink-0">Sprite Adı:</span>
+                        <input type="text" id="sprite-name-input" value="Benim_Sprite" class="w-full bg-transparent border-0 p-0 text-xs font-mono font-bold text-red-400 focus:ring-0 focus:outline-none" placeholder="Isim verin...">
                     </div>
-                    <button class="btn btn-accent" onclick="copyCode()">Kodu Kopyala</button>
                 </div>
-                <div style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.75rem;">
-                    Bu kodu herhangi bir ek kütüphane indirmeden doğrudan Arduino'nuza yükleyebilirsiniz.
+
+                <!-- 8x8 LED Grid with 0 and 1 values -->
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner w-full max-w-[290px]">
+                    <div class="led-grid grid gap-1.5" id="design-grid">
+                        <!-- Generated by JS with 0/1 content dynamically -->
+                    </div>
                 </div>
-                <div class="code-block-wrapper">
-                    <pre><code id="code-output"></code></pre>
+
+                <!-- Grid Controls -->
+                <div class="w-full grid grid-cols-2 gap-2.5 mt-4" id="basic-grid-controls">
+                    <button onclick="clearGrid()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-trash-can"></i> Temizle
+                    </button>
+                    <button onclick="fillGrid()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-fill"></i> Tümünü Yak
+                    </button>
+                </div>
+
+                <!-- Multi Frame Animation Controls -->
+                <div class="w-full border-t border-slate-800 mt-5 pt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wide">Hız (Gecikme Süresi)</label>
+                        <span class="text-xs font-mono font-bold text-red-400" id="speed-display">300ms</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="speed-slider" min="50" max="1000" step="25" value="300" class="w-full accent-red-500 bg-slate-800 rounded-lg appearance-none h-1.5 cursor-pointer">
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 mt-4" id="animation-buttons-row">
+                        <button id="btn-add-frame" onclick="addFrame()" class="py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs font-semibold transition flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-plus text-sm"></i>
+                            <span>Kare Ekle</span>
+                        </button>
+                        <button id="btn-play-pause" onclick="togglePlay()" class="py-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-400 rounded-xl text-xs font-semibold transition flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-play text-sm"></i>
+                            <span id="play-status">Oynat</span>
+                        </button>
+                        <button onclick="resetFrames()" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-rotate-left text-sm"></i>
+                            <span>Sıfırla</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Connected pins badge bar -->
-            <div class="pin-bar">
-                <div class="pin-bar-nodes">
-                    <div class="pin-node">VCC ➔ <span>5V</span></div>
-                    <div class="pin-node">GND ➔ <span>GND</span></div>
-                    <div class="pin-node">DIN ➔ <span id="pin-din-val">D12</span></div>
-                    <div class="pin-node">CS ➔ <span id="pin-cs-val">D10</span></div>
-                    <div class="pin-node">CLK ➔ <span id="pin-clk-val">D11</span></div>
+        <!-- Right Side: 50 Presets with Search & Direct Append Button -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            <!-- Presets Options -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col h-[525px]">
+                <h2 class="text-sm font-bold uppercase tracking-wider mb-3 text-slate-400 flex items-center gap-2 border-b border-slate-800 pb-2 flex-shrink-0">
+                    <i class="fa-solid fa-wand-magic-sparkles text-red-500"></i> 50 Farklı Alternatif Şablon
+                </h2>
+                
+                <!-- Search Box -->
+                <div class="relative mb-3 flex-shrink-0">
+                    <input type="text" id="preset-search" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-xs text-slate-300 focus:outline-none focus:border-red-500 transition" placeholder="Şablon ara (örn: Kalp, Gülüş, 7...)">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-600 text-xs"></i>
                 </div>
-                <div style="font-weight: 500;">robotist.fun</div>
+
+                <!-- Presets Scroll Area -->
+                <div class="flex-grow overflow-y-auto pr-1 space-y-1.5" id="presets-container">
+                    <!-- Dynamic Presets (50 items) -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Full Width Code Section (Premium UX) -->
+    <section class="max-w-7xl w-full mx-auto px-4 sm:px-6 mb-8">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-code text-red-500"></i>
+                    <div>
+                        <h2 class="text-md font-bold text-slate-200">Kütüphanesiz Saf C++ Kodu</h2>
+                        <p class="text-[10px] text-slate-500">Bu kodu herhangi bir ek dosya indirmeden doğrudan Arduino'nuza yükleyebilirsiniz.</p>
+                    </div>
+                </div>
+                <button onclick="copyToClipboard()" class="py-2 px-4 bg-red-600/10 hover:bg-red-600/20 border border-red-500/20 text-red-400 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-copy"></i> Kodu Kopyala
+                </button>
+            </div>
+
+            <div class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex flex-col h-80">
+                <textarea id="code-box" class="w-full h-full p-4 bg-transparent border-0 resize-none font-mono text-xs text-slate-300 focus:ring-0 focus:outline-none overflow-y-auto" readonly></textarea>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <span>✅</span> Kod başarıyla kopyalandı!
-    </div>
-
-    <footer>
-        <p>© 2026 ROBOTIST Çözüm Paneli. Her hakkı saklıdır. | Hayal gücünü kodla, geleceği robotla!</p>
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-6 px-6 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-heart text-red-500 animate-pulse"></i>
+                <span>© 2026 ROBOTIST Çözüm Paneli. Her hakkı saklıdır.</span>
+            </span>
+            <div class="flex gap-4 font-mono text-xs text-slate-400">
+                <span>VCC ➔ 5V</span>
+                <span>GND ➔ GND</span>
+                <span id="footer-din">DIN ➔ D12</span>
+                <span id="footer-cs">CS ➔ D10</span>
+                <span id="footer-clk">CLK ➔ D11</span>
+            </div>
+            <a href="https://robotist.fun" target="_blank" class="text-red-400 hover:text-red-350 font-bold transition">robotist.fun</a>
+        </div>
     </footer>
 
-    <!-- Presets and Font Data JS -->
+    <!-- Notification toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-emerald-500 text-white font-bold py-3 px-5 rounded-xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 z-50">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-message">Kod başarıyla kopyalandı!</span>
+    </div>
+
+    <!-- Logic Script -->
     <script>
-        // Preset Bitmaps (50+ Presets)
-        const PRESETS = {
-            "Emojiler": {
-                "Gülen Yüz": [0x3c, 0x42, 0x95, 0xa1, 0xa1, 0x95, 0x42, 0x3c],
-                "Üzgün Yüz": [0x3c, 0x42, 0xa5, 0x91, 0x91, 0xa5, 0x42, 0x3c],
-                "Göz Kırpan": [0x3c, 0x42, 0x95, 0xa1, 0x85, 0x99, 0x42, 0x3c],
-                "Şaşırmış": [0x3c, 0x42, 0xa5, 0x91, 0x99, 0x99, 0x42, 0x3c],
-                "Dil Çıkaran": [0x3c, 0x42, 0xa5, 0x91, 0xb1, 0xa5, 0x42, 0x3c],
-                "Uykulu": [0x3c, 0x42, 0x91, 0xa1, 0x81, 0x9d, 0x42, 0x3c],
-                "Kızgın": [0x3c, 0x42, 0xb5, 0x91, 0x91, 0xad, 0x42, 0x3c],
-                "Bıyıklı": [0x3c, 0x5a, 0x95, 0xa1, 0xa1, 0xe7, 0x42, 0x3c]
-            },
-            "Semboller": {
-                "Kalp": [0x00, 0x66, 0xff, 0xff, 0xff, 0x7e, 0x3c, 0x18],
-                "Küçük Kalp": [0x00, 0x00, 0x24, 0x6e, 0x6e, 0x3c, 0x18, 0x00],
-                "Yıldız": [0x18, 0x3c, 0x7e, 0xdb, 0xff, 0x24, 0x42, 0x00],
-                "Güneş": [0x24, 0x00, 0xbd, 0x3c, 0x3c, 0xbd, 0x00, 0x24],
-                "Hilal": [0x3c, 0x06, 0x03, 0x03, 0x13, 0x3b, 0x38, 0x30],
-                "Ev": [0x18, 0x3c, 0x7e, 0xff, 0xdb, 0xdb, 0xff, 0x00],
-                "Kilit": [0x3c, 0x42, 0x42, 0xff, 0xe7, 0xe7, 0xff, 0x00],
-                "Anahtar": [0x30, 0x4c, 0x4c, 0x30, 0x10, 0x10, 0x1c, 0x00],
-                "Müzik Notası": [0x0c, 0x0e, 0x0b, 0x09, 0x08, 0x38, 0x78, 0x30],
-                "Tik": [0x00, 0x01, 0x03, 0x06, 0x8c, 0xd8, 0x70, 0x20],
-                "Çarpı": [0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81],
-                "Ampul": [0x3c, 0x42, 0x42, 0x42, 0x24, 0x24, 0x18, 0x18],
-                "Ok Yukarı": [0x18, 0x3c, 0x7e, 0x18, 0x18, 0x18, 0x18, 0x18],
-                "Ok Aşağı": [0x18, 0x18, 0x18, 0x18, 0x18, 0x7e, 0x3c, 0x18],
-                "Ok Sol": [0x10, 0x30, 0x70, 0xff, 0xff, 0x70, 0x30, 0x10],
-                "Ok Sağ": [0x08, 0x0c, 0x0e, 0xff, 0xff, 0x0e, 0x0c, 0x08],
-                "Soru İşareti": [0x3c, 0x42, 0x02, 0x0c, 0x10, 0x10, 0x00, 0x10],
-                "Ünlem": [0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x18, 0x00],
-                "Ateş": [0x18, 0x3c, 0x7c, 0x7e, 0xff, 0xff, 0xdb, 0x99],
-                "Şimşek": [0x0c, 0x18, 0x30, 0x7e, 0x7e, 0x0c, 0x18, 0x30],
-                "Kar Tanesi": [0x99, 0x5a, 0x3c, 0xe7, 0xe7, 0x3c, 0x5a, 0x99],
-                "Çöp Kutusu": [0x3e, 0x2a, 0x3e, 0x3e, 0x22, 0x22, 0x3e, 0x00],
-                "Hediye": [0x18, 0x7e, 0xdb, 0xff, 0xbd, 0xbd, 0xff, 0x00],
-                "Kupa": [0x7e, 0xdb, 0xff, 0x7e, 0x3c, 0x18, 0x18, 0x3c],
-                "Telefon": [0x3c, 0x24, 0x24, 0x24, 0x24, 0x24, 0x3c, 0x00],
-                "Yaprak": [0x0c, 0x1e, 0x3e, 0x7c, 0xf8, 0xf0, 0x60, 0x40],
-                "Saat": [0x3c, 0x42, 0x99, 0x95, 0x81, 0x81, 0x42, 0x3c]
-            },
-            "Oyun": {
-                "Pacman": [0x3e, 0x7d, 0xf0, 0xe0, 0xf0, 0xff, 0x7f, 0x3e],
-                "Hayalet": [0x3c, 0x7e, 0xff, 0xdb, 0xff, 0xff, 0xff, 0xa5],
-                "İstilacı": [0x18, 0x3c, 0x7e, 0xdb, 0xff, 0x24, 0x5a, 0xa5],
-                "Kuru Kafa": [0x3c, 0x7e, 0xdb, 0xff, 0x7e, 0x3c, 0x3c, 0x24],
-                "Balık": [0x0c, 0x1e, 0x3f, 0x7c, 0x3f, 0x1e, 0x0c, 0x0a],
-                "Örümcek": [0x99, 0x5a, 0x7e, 0x3c, 0x3c, 0x7e, 0x5a, 0x99],
-                "Sonsuzluk": [0x00, 0x66, 0x99, 0x99, 0x42, 0x99, 0x99, 0x66],
-                "Çapa": [0x18, 0x18, 0x3c, 0x18, 0xff, 0xdb, 0x7e, 0x3c],
-                "Elmas": [0x18, 0x3c, 0x7e, 0xff, 0xff, 0x7e, 0x3c, 0x18]
-            },
-            "Rakamlar": {
-                "0": [0x3c, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3c],
-                "1": [0x18, 0x28, 0x08, 0x08, 0x08, 0x08, 0x08, 0x3e],
-                "2": [0x3c, 0x42, 0x02, 0x0c, 0x30, 0x40, 0x40, 0x7e],
-                "3": [0x3c, 0x42, 0x02, 0x1c, 0x02, 0x02, 0x42, 0x3c],
-                "4": [0x04, 0x0c, 0x14, 0x24, 0x44, 0x7e, 0x04, 0x04],
-                "5": [0x7e, 0x40, 0x40, 0x7c, 0x02, 0x02, 0x42, 0x3c],
-                "6": [0x3c, 0x40, 0x40, 0x7c, 0x42, 0x42, 0x42, 0x3c],
-                "7": [0x7e, 0x02, 0x04, 0x08, 0x10, 0x20, 0x20, 0x20],
-                "8": [0x3c, 0x42, 0x42, 0x3c, 0x42, 0x42, 0x42, 0x3c],
-                "9": [0x3c, 0x42, 0x42, 0x3e, 0x02, 0x02, 0x42, 0x3c]
-            }
-        };
+        // Default Dynamic Pin Configurations
+        let dinPin = 12;
+        let csPin = 10;
+        let clkPin = 11;
+        let spriteName = "Benim_Sprite";
 
-        // Font Bitmaps for Scrolling Text (Standard A-Z, 0-9, space, and simple symbols)
-        const FONT = {
+        // 8x8 ASCII Font Map for Simulator & C++ code generation
+        const FONT_MAP = {
             ' ': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-            'A': [0x18, 0x24, 0x42, 0x42, 0x7e, 0x42, 0x42, 0x42],
-            'B': [0x7c, 0x22, 0x22, 0x3c, 0x22, 0x22, 0x22, 0x7c],
-            'C': [0x3c, 0x42, 0x40, 0x40, 0x40, 0x40, 0x42, 0x3c],
-            'D': [0x78, 0x24, 0x22, 0x22, 0x22, 0x22, 0x24, 0x78],
-            'E': [0x7e, 0x40, 0x40, 0x7c, 0x40, 0x40, 0x40, 0x7e],
-            'F': [0x7e, 0x40, 0x40, 0x78, 0x40, 0x40, 0x40, 0x40],
-            'G': [0x3c, 0x42, 0x40, 0x40, 0x4e, 0x42, 0x42, 0x3c],
-            'H': [0x42, 0x42, 0x42, 0x7e, 0x42, 0x42, 0x42, 0x42],
-            'I': [0x3e, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x3e],
-            'J': [0x07, 0x02, 0x02, 0x02, 0x02, 0x02, 0x42, 0x3c],
-            'K': [0x44, 0x48, 0x50, 0x60, 0x50, 0x48, 0x44, 0x42],
-            'L': [0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x7e],
-            'M': [0x42, 0x66, 0x5a, 0x42, 0x42, 0x42, 0x42, 0x42],
-            'N': [0x42, 0x62, 0x52, 0x4a, 0x46, 0x42, 0x42, 0x42],
-            'O': [0x3c, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3c],
-            'P': [0x7c, 0x42, 0x42, 0x7c, 0x40, 0x40, 0x40, 0x40],
-            'Q': [0x3c, 0x42, 0x42, 0x42, 0x42, 0x4a, 0x44, 0x3a],
-            'R': [0x7c, 0x42, 0x42, 0x7c, 0x48, 0x44, 0x42, 0x42],
-            'S': [0x3c, 0x42, 0x40, 0x3c, 0x02, 0x02, 0x42, 0x3c],
-            'T': [0x7e, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08],
-            'U': [0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3c],
-            'V': [0x42, 0x42, 0x42, 0x42, 0x42, 0x24, 0x24, 0x18],
-            'W': [0x42, 0x42, 0x42, 0x42, 0x5a, 0x5a, 0x66, 0x42],
-            'X': [0x42, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x42],
-            'Y': [0x42, 0x42, 0x24, 0x18, 0x08, 0x08, 0x08, 0x08],
-            'Z': [0x7e, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x7e],
-            '0': [0x3c, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3c],
-            '1': [0x18, 0x28, 0x08, 0x08, 0x08, 0x08, 0x08, 0x3e],
-            '2': [0x3c, 0x42, 0x02, 0x0c, 0x30, 0x40, 0x40, 0x7e],
-            '3': [0x3c, 0x42, 0x02, 0x1c, 0x02, 0x02, 0x42, 0x3c],
-            '4': [0x04, 0x0c, 0x14, 0x24, 0x44, 0x7e, 0x04, 0x04],
-            '5': [0x7e, 0x40, 0x40, 0x7c, 0x02, 0x02, 0x42, 0x3c],
-            '6': [0x3c, 0x40, 0x40, 0x7c, 0x42, 0x42, 0x42, 0x3c],
-            '7': [0x7e, 0x02, 0x04, 0x08, 0x10, 0x20, 0x20, 0x20],
-            '8': [0x3c, 0x42, 0x42, 0x3c, 0x42, 0x42, 0x42, 0x3c],
-            '9': [0x3c, 0x42, 0x42, 0x3e, 0x02, 0x02, 0x42, 0x3c],
-            '.': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0c, 0x0c],
-            ',': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0c, 0x04],
-            '!': [0x08, 0x08, 0x08, 0x08, 0x08, 0x00, 0x08, 0x00],
-            '?': [0x3c, 0x42, 0x02, 0x0c, 0x10, 0x00, 0x10, 0x00],
-            '-': [0x00, 0x00, 0x00, 0x3e, 0x00, 0x00, 0x00, 0x00],
-            ':': [0x00, 0x00, 0x0c, 0x0c, 0x00, 0x0c, 0x0c, 0x00],
-            '+': [0x00, 0x08, 0x08, 0x3e, 0x08, 0x08, 0x00, 0x00],
-            '=': [0x00, 0x00, 0x3e, 0x00, 0x3e, 0x00, 0x00, 0x00]
+            'A': [0x18, 0x24, 0x42, 0x7E, 0x42, 0x42, 0x42, 0x00],
+            'B': [0x7C, 0x22, 0x22, 0x3E, 0x22, 0x22, 0x7C, 0x00],
+            'C': [0x3C, 0x42, 0x40, 0x40, 0x40, 0x42, 0x3C, 0x00],
+            'D': [0x78, 0x24, 0x22, 0x22, 0x22, 0x24, 0x78, 0x00],
+            'E': [0x7E, 0x40, 0x40, 0x7C, 0x40, 0x40, 0x7E, 0x00],
+            'F': [0x7E, 0x40, 0x40, 0x78, 0x40, 0x40, 0x40, 0x00],
+            'G': [0x3C, 0x42, 0x40, 0x4E, 0x42, 0x42, 0x3C, 0x00],
+            'H': [0x42, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x42, 0x00],
+            'I': [0x3C, 0x18, 0x18, 0x18, 0x18, 0x18, 0x3C, 0x00],
+            'J': [0x1E, 0x0C, 0x0C, 0x0C, 0x0C, 0x4C, 0x38, 0x00],
+            'K': [0x42, 0x44, 0x48, 0x70, 0x48, 0x44, 0x42, 0x00],
+            'L': [0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x7E, 0x00],
+            'M': [0x42, 0x66, 0x5A, 0x42, 0x42, 0x42, 0x42, 0x00],
+            'N': [0x42, 0x62, 0x52, 0x4A, 0x46, 0x42, 0x42, 0x00],
+            'O': [0x3C, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00],
+            'P': [0x7C, 0x42, 0x42, 0x7C, 0x40, 0x40, 0x40, 0x00],
+            'Q': [0x3C, 0x42, 0x42, 0x42, 0x4A, 0x44, 0x3A, 0x00],
+            'R': [0x7C, 0x42, 0x42, 0x7C, 0x48, 0x44, 0x42, 0x00],
+            'S': [0x3C, 0x42, 0x40, 0x3C, 0x02, 0x42, 0x3C, 0x00],
+            'T': [0x7E, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x00],
+            'U': [0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00],
+            'V': [0x42, 0x42, 0x42, 0x42, 0x24, 0x24, 0x18, 0x00],
+            'W': [0x42, 0x42, 0x42, 0x42, 0x5A, 0x66, 0x42, 0x00],
+            'X': [0x42, 0x42, 0x24, 0x18, 0x24, 0x42, 0x42, 0x00],
+            'Y': [0x42, 0x42, 0x24, 0x18, 0x18, 0x18, 0x18, 0x00],
+            'Z': [0x7E, 0x02, 0x04, 0x18, 0x20, 0x40, 0x7E, 0x00],
+            '0': [0x3C, 0x46, 0x4A, 0x52, 0x62, 0x42, 0x3C, 0x00],
+            '1': [0x18, 0x28, 0x08, 0x08, 0x08, 0x08, 0x3E, 0x00],
+            '2': [0x3C, 0x42, 0x02, 0x0C, 0x30, 0x40, 0x7E, 0x00],
+            '3': [0x3C, 0x42, 0x02, 0x1C, 0x02, 0x42, 0x3C, 0x00],
+            '4': [0x08, 0x18, 0x28, 0x48, 0x7E, 0x08, 0x08, 0x00],
+            '5': [0x7E, 0x40, 0x7C, 0x02, 0x02, 0x42, 0x3C, 0x00],
+            '6': [0x3C, 0x40, 0x7C, 0x42, 0x42, 0x42, 0x3C, 0x00],
+            '7': [0x7E, 0x02, 0x04, 0x08, 0x10, 0x10, 0x10, 0x00],
+            '8': [0x3C, 0x42, 0x42, 0x3C, 0x42, 0x42, 0x3C, 0x00],
+            '9': [0x3C, 0x42, 0x42, 0x3E, 0x02, 0x02, 0x3C, 0x00],
+            '.': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x18, 0x18],
+            '!': [0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x18, 0x00],
+            '?': [0x3C, 0x42, 0x02, 0x0C, 0x18, 0x00, 0x18, 0x00],
+            '-': [0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00, 0x00],
+            '+': [0x00, 0x18, 0x18, 0x7E, 0x18, 0x18, 0x00, 0x00]
         };
 
-        // App State
-        let currentMode = 'scrolling'; // 'scrolling' or 'drawing'
+        // 50 Different Preset Definitions
+        const PRESETS = {
+            // --- IFADELER (EMOTICONS) ---
+            gulenYuz: { name: "Mutlu Gülen Yüz", category: "İfadeler", icon: "fa-face-smile", frames: [[0x3C, 0x42, 0xA5, 0x81, 0xA5, 0x99, 0x42, 0x3C]] },
+            uzgunYuz: { name: "Üzgün Yüz", category: "İfadeler", icon: "fa-face-sad-tear", frames: [[0x3C, 0x42, 0xA5, 0x81, 0x99, 0xA5, 0x42, 0x3C]] },
+            gozKirpanYuz: { name: "Göz Kırpan Yüz", category: "İfadeler", icon: "fa-face-smile-wink", frames: [[0x3C, 0x42, 0xA1, 0x81, 0xA5, 0x99, 0x42, 0x3C]] },
+            dilCikaran: { name: "Dil Çıkaran Yüz", category: "İfadeler", icon: "fa-face-tongue", frames: [[0x3C, 0x42, 0xA5, 0x81, 0xBD, 0x9D, 0x46, 0x3C]] },
+            kizginYuz: { name: "Kızgın Yüz", category: "İfadeler", icon: "fa-face-angry", frames: [[0x3C, 0x5A, 0xA5, 0x81, 0x81, 0xBD, 0x42, 0x3C]] },
+            saskinYuz: { name: "Şaşkın Yüz", category: "İfadeler", icon: "fa-face-surprise", frames: [[0x3C, 0x42, 0xA5, 0x81, 0x99, 0x99, 0x42, 0x3C]] },
+            havaliYuz: { name: "Gözlüklü Havalı Yüz", category: "İfadeler", icon: "fa-face-glasses", frames: [[0x3C, 0x5A, 0xFF, 0x81, 0xA5, 0x99, 0x42, 0x3C]] },
+            kahkahaAnim: { name: "Gözü Yaşlı Kahkaha (Anim)", category: "İfadeler", icon: "fa-face-grin-tears", frames: [[0x42, 0xA5, 0x00, 0x42, 0x81, 0x7E, 0x3C, 0x00], [0x00, 0xE7, 0x00, 0x42, 0xFF, 0x7E, 0x00, 0x00]] },
+            opucuk: { name: "Öpücük Gönderen", category: "İfadeler", icon: "fa-kiss-wink-heart", frames: [[0x3C, 0x42, 0xA1, 0x81, 0x85, 0x8A, 0x44, 0x3C]] },
+            uykulu: { name: "Uykulu Zzz...", category: "İfadeler", icon: "fa-bed", frames: [[0x3C, 0x42, 0x99, 0x81, 0x81, 0xBD, 0x42, 0x3C]] },
+
+            // --- SEMBOLLER ---
+            atanKalp: { name: "Atan Kalp (Anim)", category: "Semboller", icon: "fa-heartbeat", frames: [[0x00, 0x66, 0xFF, 0xFF, 0x7E, 0x3C, 0x18, 0x00], [0x00, 0x00, 0x24, 0x7E, 0x7E, 0x3C, 0x18, 0x00]] },
+            kirikKalp: { name: "Kırık Kalp", category: "Semboller", icon: "fa-heart-crack", frames: [[0x00, 0x66, 0xB6, 0xDA, 0x6E, 0x3C, 0x18, 0x00]] },
+            okYukari: { name: "Yön: Yukarı", category: "Semboller", icon: "fa-arrow-up", frames: [[0x18, 0x3C, 0x5A, 0x99, 0x18, 0x18, 0x18, 0x18]] },
+            okAsagi: { name: "Yön: Aşağı", category: "Semboller", icon: "fa-arrow-down", frames: [[0x18, 0x18, 0x18, 0x18, 0x99, 0x5A, 0x3C, 0x18]] },
+            okSaga: { name: "Yön: Sağa", category: "Semboller", icon: "fa-arrow-right", frames: [[0x08, 0x0C, 0x0E, 0xFF, 0xFF, 0x0E, 0x0C, 0x08]] },
+            okSola: { name: "Yön: Sola", category: "Semboller", icon: "fa-arrow-left", frames: [[0x10, 0x30, 0x70, 0xFF, 0xFF, 0x70, 0x30, 0x10]] },
+            onayIsareti: { name: "Doğru / Onay (Tick)", category: "Semboller", icon: "fa-check", frames: [[0x00, 0x01, 0x03, 0x06, 0x8C, 0xD8, 0x70, 0x20]] },
+            hataIsareti: { name: "Hata / Çarpı (Cross)", category: "Semboller", icon: "fa-xmark", frames: [[0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81]] },
+            soruIsareti: { name: "Soru İşareti", category: "Semboller", icon: "fa-question", frames: [[0x3C, 0x42, 0x02, 0x0C, 0x18, 0x00, 0x18, 0x00]] },
+            unlemIsareti: { name: "Tehlike / Ünlem", category: "Semboller", icon: "fa-exclamation", frames: [[0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x18, 0x00]] },
+
+            // --- OYUN & GEEK ---
+            spaceInvader: { name: "Space Invader (Atari)", category: "Oyun & Geek", icon: "fa-gamepad", frames: [[0x18, 0x3C, 0x7E, 0xDB, 0xFF, 0x24, 0x5A, 0x81]] },
+            pacman: { name: "Pacman (Göz Kırpan Anim)", category: "Oyun & Geek", icon: "fa-circle-dot", frames: [[0x3E, 0x7F, 0x71, 0x70, 0x7C, 0x7F, 0x3E, 0x00], [0x3E, 0x7F, 0x71, 0x73, 0x7F, 0x7F, 0x3E, 0x00]] },
+            hayalet: { name: "Pacman Hayaleti", category: "Oyun & Geek", icon: "fa-ghost", frames: [[0x3C, 0x7E, 0xDB, 0xFF, 0xFF, 0xFF, 0xDB, 0x00]] },
+            kurtaricikilic: { name: "Kahraman Kılıcı", category: "Oyun & Geek", icon: "fa-sword", frames: [[0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0xD0, 0x80]] },
+            kalkan: { name: "Koruyucu Kalkan", category: "Oyun & Geek", icon: "fa-shield-halved", frames: [[0x7E, 0x7E, 0xFF, 0xFF, 0xFF, 0x7E, 0x3C, 0x18]] },
+            kafatasi: { name: "Kafatası / Korsan", category: "Oyun & Geek", icon: "fa-skull", frames: [[0x3C, 0x7E, 0xDB, 0xFF, 0x7E, 0x3C, 0x3C, 0x24]] },
+            yildiz: { name: "Süper Yıldız", category: "Oyun & Geek", icon: "fa-star", frames: [[0x18, 0x3C, 0xFF, 0x7E, 0x3C, 0x5A, 0x42, 0x00]] },
+            elmas: { name: "Değerli Elmas", category: "Oyun & Geek", icon: "fa-gem", frames: [[0x1C, 0x3E, 0x7F, 0xFF, 0xFF, 0x7E, 0x3C, 0x18]] },
+            atesAnim: { name: "Yanan Ateş (Anim)", category: "Oyun & Geek", icon: "fa-fire", frames: [[0x18, 0x3C, 0x7E, 0xFF, 0xDB, 0xC3, 0x81, 0x00], [0x18, 0x24, 0x5A, 0xBD, 0xFF, 0x66, 0x42, 0x00]] },
+            radarAnim: { name: "Dönen Radar (Anim)", category: "Oyun & Geek", icon: "fa-satellite-dish", frames: [[0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF], [0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF]] },
+
+            // --- HAYVANLAR ---
+            kedi: { name: "Sevimli Kedi", category: "Hayvanlar", icon: "fa-cat", frames: [[0x42, 0xE7, 0xFF, 0xFF, 0xDB, 0xC3, 0xC3, 0x00]] },
+            balik: { name: "Yüzen Balık (Anim)", category: "Hayvanlar", icon: "fa-fish", frames: [[0x0C, 0x1E, 0x3E, 0x7C, 0x7C, 0x3E, 0x1E, 0x0C], [0x0C, 0x1E, 0x3F, 0x7E, 0x7E, 0x3F, 0x1E, 0x0C]] },
+            ordek: { name: "Yüzen Ördek", category: "Hayvanlar", icon: "fa-crow", frames: [[0x38, 0x7C, 0x3E, 0x1F, 0x3F, 0x7F, 0x3E, 0x00]] },
+            paticik: { name: "Pati İzi", category: "Hayvanlar", icon: "fa-paw", frames: [[0x00, 0x66, 0x66, 0x00, 0x18, 0x3C, 0x3C, 0x18]] },
+            kelebek: { name: "Çırpan Kelebek (Anim)", category: "Hayvanlar", icon: "fa-bug", frames: [[0x99, 0xFF, 0xE7, 0x18, 0x18, 0xE7, 0xFF, 0x99], [0x00, 0x66, 0x7E, 0x18, 0x18, 0x7E, 0x66, 0x00]] },
+
+            // --- DOGA & OBJELER ---
+            gunes: { name: "Işıldayan Güneş", category: "Doğa & Objeler", icon: "fa-sun", frames: [[0x24, 0x42, 0x18, 0x3C, 0x3C, 0x18, 0x42, 0x24]] },
+            hilal: { name: "Hilal / Ay", category: "Doğa & Objeler", icon: "fa-moon", frames: [[0x1C, 0x30, 0x60, 0x60, 0x60, 0x30, 0x1C, 0x00]] },
+            bulutYagmur: { name: "Yagmurlu Bulut (Anim)", category: "Doğa & Objeler", icon: "fa-cloud-showers-heavy", frames: [[0x3C, 0x7E, 0xFF, 0xFF, 0x00, 0x24, 0x48, 0x10], [0x3C, 0x7E, 0xFF, 0xFF, 0x00, 0x48, 0x10, 0x24]] },
+            agac: { name: "Çam Ağacı", category: "Doğa & Objeler", icon: "fa-tree", frames: [[0x18, 0x3C, 0x3C, 0x7E, 0x7E, 0xFF, 0x18, 0x18]] },
+            cicek: { name: "Açan Çiçek", category: "Doğa & Objeler", icon: "fa-flower", frames: [[0x18, 0x3C, 0x5A, 0xFF, 0x5A, 0x3C, 0x18, 0x00]] },
+            ev: { name: "Küçük Ev", category: "Doğa & Objeler", icon: "fa-house", frames: [[0x18, 0x3C, 0x7E, 0xFF, 0xDB, 0xDB, 0xFF, 0x00]] },
+            anahtar: { name: "Hazine Anahtarı", category: "Doğa & Objeler", icon: "fa-key", frames: [[0x38, 0x44, 0x38, 0x10, 0x10, 0x18, 0x10, 0x1C]] },
+
+            // --- SAYILAR ---
+            sayi0: { name: "Rakam: 0", category: "Sayılar", icon: "fa-0", frames: [[0x3C, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00]] },
+            sayi1: { name: "Rakam: 1", category: "Sayılar", icon: "fa-1", frames: [[0x18, 0x28, 0x08, 0x08, 0x08, 0x08, 0x3E, 0x00]] },
+            sayi2: { name: "Rakam: 2", category: "Sayılar", icon: "fa-2", frames: [[0x3C, 0x42, 0x02, 0x0C, 0x30, 0x40, 0x7E, 0x00]] },
+            sayi3: { name: "Rakam: 3", category: "Sayılar", icon: "fa-3", frames: [[0x3C, 0x42, 0x02, 0x1C, 0x02, 0x42, 0x3C, 0x00]] },
+            sayi4: { name: "Rakam: 4", category: "Sayılar", icon: "fa-4", frames: [[0x08, 0x18, 0x28, 0x48, 0x7E, 0x08, 0x08, 0x00]] },
+            sayi5: { name: "Rakam: 5", category: "Sayılar", icon: "fa-5", frames: [[0x7E, 0x40, 0x7C, 0x02, 0x02, 0x42, 0x3C, 0x00]] },
+            sayi6: { name: "Rakam: 6", category: "Sayılar", icon: "fa-6", frames: [[0x3C, 0x40, 0x7C, 0x42, 0x42, 0x42, 0x3C, 0x00]] },
+            sayi7: { name: "Rakam: 7", category: "Sayılar", icon: "fa-7", frames: [[0x7E, 0x02, 0x04, 0x08, 0x10, 0x10, 0x10, 0x00]] },
+            sayi8: { name: "Rakam: 8", category: "Sayılar", icon: "fa-8", frames: [[0x3C, 0x42, 0x42, 0x3C, 0x42, 0x42, 0x3C, 0x00]] },
+            sayi9: { name: "Rakam: 9", category: "Sayılar", icon: "fa-9", frames: [[0x3C, 0x42, 0x42, 0x3E, 0x02, 0x02, 0x3C, 0x00]] }
+        };
+
+        // State variables
+        let frames = [ [0,0,0,0,0,0,0,0] ]; 
         let currentFrameIndex = 0;
-        let animationFrames = [
-            [0x00, 0x66, 0xff, 0xff, 0xff, 0x7e, 0x3c, 0x18] // Initial Heart frame
-        ];
-        let scrollText = "ROBOTIST.FUN";
         let isPlaying = false;
         let playInterval = null;
-        let scrollingStep = 0;
-        let speedMs = 300;
+        let speed = 300;
+        let isScrollMode = false;
+        let scrollText = "ROBOTIST.FUN";
+        let scrollShiftOffset = 0;
 
-        // Initialize App
-        window.onload = function() {
-            createLedMatrix();
-            loadPresetCategories();
-            loadCategoryItems("Emojiler");
-            updateGenerator();
-            startScrollingAnimation();
-        };
+        // Initialize elements
+        const gridContainer = document.getElementById('design-grid');
+        const presetsContainer = document.getElementById('presets-container');
+        const codeBox = document.getElementById('code-box');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedDisplay = document.getElementById('speed-display');
+        const playStatus = document.getElementById('play-status');
+        const playBtnIcon = document.querySelector('#btn-play-pause i');
+        const frameIndicator = document.getElementById('frame-indicator');
+        const searchInput = document.getElementById('preset-search');
+        
+        // Mode Controls
+        const scrollModeToggle = document.getElementById('scroll-mode-toggle');
+        const scrollTextInput = document.getElementById('scroll-text-input');
+        const modeBadge = document.getElementById('mode-badge');
+        const basicGridControls = document.getElementById('basic-grid-controls');
+        const btnAddFrame = document.getElementById('btn-add-frame');
 
-        // Create the 8x8 grid of LEDs
-        function createLedMatrix() {
-            const matrixDiv = document.getElementById("led-matrix");
-            matrixDiv.innerHTML = '';
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const led = document.createElement("div");
-                    led.className = "led";
-                    led.dataset.row = r;
-                    led.dataset.col = c;
-                    
-                    // Allow click and drag to paint
-                    led.addEventListener("mousedown", handleLedClick);
-                    led.addEventListener("mouseenter", handleLedDrag);
-                    
-                    matrixDiv.appendChild(led);
-                }
-            }
-            
-            // Mouse up listener to end drag drawing
-            window.addEventListener("mouseup", () => window.isDrawing = false);
-            
-            // Draw current active frame
-            drawFrameOnGrid();
-        }
+        // Dynamic Pin Selectors
+        const pinDinSelect = document.getElementById('pin-din');
+        const pinCsSelect = document.getElementById('pin-cs');
+        const pinClkSelect = document.getElementById('pin-clk');
 
-        function handleLedClick(e) {
-            if (currentMode === 'scrolling') return; // Cannot edit during scrolling simulator
-            window.isDrawing = true;
-            toggleLed(e.target);
-        }
+        // Sprite Name Input Selector
+        const spriteNameInput = document.getElementById('sprite-name-input');
 
-        function handleLedDrag(e) {
-            if (currentMode === 'scrolling') return;
-            if (window.isDrawing) {
-                toggleLed(e.target);
-            }
-        }
+        // Footer Dynamic Connection Labels
+        const footerDin = document.getElementById('footer-din');
+        const footerCs = document.getElementById('footer-cs');
+        const footerClk = document.getElementById('footer-clk');
 
-        function toggleLed(led) {
-            led.classList.toggle("active");
-            saveGridToCurrentFrame();
-            updateTimelineStrip();
-            updateGenerator();
-        }
-
-        // Draw the current active frame array to the HTML grid
-        function drawFrameOnGrid() {
-            const leds = document.querySelectorAll(".led");
-            const frame = animationFrames[currentFrameIndex];
-            
-            leds.forEach(led => {
-                const r = parseInt(led.dataset.row);
-                const c = parseInt(led.dataset.col);
-                // In binary, LSB is col 7, MSB is col 0
-                const bitVal = (frame[r] >> (7 - c)) & 0x01;
-                
-                if (bitVal === 1) {
-                    led.classList.add("active");
-                } else {
-                    led.classList.remove("active");
-                }
+        // Create Grid Buttons dynamically displaying 0/1
+        for (let i = 0; i < 64; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'led-lamp rounded-lg border text-sm font-bold flex items-center justify-center led-inactive';
+            btn.dataset.index = i;
+            btn.innerText = "0"; // Default value inside grid
+            btn.addEventListener('click', () => {
+                if (!isScrollMode) toggleLed(i);
             });
-
-            document.getElementById("frame-counter").innerText = `Kare ${currentFrameIndex + 1}/${animationFrames.length}`;
+            gridContainer.appendChild(btn);
         }
 
-        // Save grid state to current animation frame
-        function saveGridToCurrentFrame() {
-            const leds = document.querySelectorAll(".led");
-            const frame = new Array(8).fill(0);
-            
-            leds.forEach(led => {
-                if (led.classList.contains("active")) {
-                    const r = parseInt(led.dataset.row);
-                    const c = parseInt(led.dataset.col);
-                    frame[r] |= (1 << (7 - c));
-                }
-            });
-            
-            animationFrames[currentFrameIndex] = frame;
-        }
+        // Handle Sprite Name Input Changes
+        spriteNameInput.addEventListener('input', (e) => {
+            // Clean input to make it a valid C++ variable name
+            let cleaned = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+            if (cleaned === "") cleaned = "Benim_Sprite";
+            spriteName = cleaned;
+            spriteNameInput.value = cleaned;
+            updateCodeOutput();
+        });
 
-        // Matrix Actions
-        function clearMatrix() {
-            if (currentMode === 'scrolling') return;
-            animationFrames[currentFrameIndex] = new Array(8).fill(0);
-            drawFrameOnGrid();
-            updateTimelineStrip();
-            updateGenerator();
-        }
+        // Handle Dynamic Pin Selection Changes
+        function onPinConfigurationChange() {
+            dinPin = parseInt(pinDinSelect.value);
+            csPin = parseInt(pinCsSelect.value);
+            clkPin = parseInt(pinClkSelect.value);
 
-        function fillMatrix() {
-            if (currentMode === 'scrolling') return;
-            animationFrames[currentFrameIndex] = new Array(8).fill(0xFF);
-            drawFrameOnGrid();
-            updateTimelineStrip();
-            updateGenerator();
-        }
+            // Update footer labels for visual cohesion
+            footerDin.innerText = `DIN ➔ D${dinPin}`;
+            footerCs.innerText = `CS ➔ D${csPin}`;
+            footerClk.innerText = `CLK ➔ D${clkPin}`;
 
-        // Switch modes (Scrolling vs Drawing)
-        function switchMode(mode) {
-            currentMode = mode;
-            document.getElementById("tab-scrolling").classList.toggle("active", mode === 'scrolling');
-            document.getElementById("tab-drawing").classList.toggle("active", mode === 'drawing');
-            document.getElementById("mode-scrolling").classList.toggle("active", mode === 'scrolling');
-            document.getElementById("mode-drawing").classList.toggle("active", mode === 'drawing');
-            
-            // Adjust layouts and titles
-            document.getElementById("timeline-controls").style.display = mode === 'drawing' ? 'flex' : 'none';
-            document.getElementById("matrix-title-label").innerText = mode === 'drawing' ? "Kendin Çiz & Simüle Et" : "Akan Yazı Simülatörü";
-            
-            // Handle animation states
-            stopAnimation();
-            if (mode === 'scrolling') {
-                startScrollingAnimation();
+            // Warn user if any chosen pins are overlapping
+            if (dinPin === csPin || dinPin === clkPin || csPin === clkPin) {
+                showToast("Dikkat: Lütfen çakışmayan farklı pinler seçiniz!", true);
             } else {
-                currentFrameIndex = 0;
-                drawFrameOnGrid();
-                updateTimelineStrip();
+                showToast("Pin bağlantıları güncellendi.");
             }
-            updateGenerator();
+
+            updateCodeOutput();
         }
 
-        // Load Preset Categories
-        function loadPresetCategories() {
-            const catContainer = document.getElementById("preset-categories");
-            catContainer.innerHTML = '';
+        // Render presets with search filter & Custom Appending button
+        function renderPresets(filterText = "") {
+            presetsContainer.innerHTML = "";
+            const query = filterText.toLowerCase().trim();
             
-            Object.keys(PRESETS).forEach((cat, index) => {
-                const btn = document.createElement("button");
-                btn.className = `preset-tab-btn ${index === 0 ? 'active' : ''}`;
-                btn.innerText = cat;
-                btn.onclick = (e) => {
-                    document.querySelectorAll(".preset-tab-btn").forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    loadCategoryItems(cat);
-                };
-                catContainer.appendChild(btn);
-            });
-        }
-
-        // Load Items for active category
-        function loadCategoryItems(categoryName) {
-            const itemsContainer = document.getElementById("preset-items");
-            itemsContainer.innerHTML = '';
-            
-            const categoryPresets = PRESETS[categoryName];
-            Object.keys(categoryPresets).forEach(name => {
-                const item = document.createElement("div");
-                item.className = "preset-item";
-                item.onclick = () => loadPreset(categoryPresets[name]);
-                
-                // Mini 8x8 visual preview
-                const preview = document.createElement("div");
-                preview.className = "preset-preview";
-                
-                const data = categoryPresets[name];
-                for (let r = 0; r < 8; r++) {
-                    for (let c = 0; c < 8; c++) {
-                        const cell = document.createElement("div");
-                        cell.className = "preset-preview-led";
-                        const bitVal = (data[r] >> (7 - c)) & 0x01;
-                        if (bitVal === 1) cell.classList.add("active");
-                        preview.appendChild(cell);
-                    }
+            for (const [key, preset] of Object.entries(PRESETS)) {
+                if (query && !preset.name.toLowerCase().includes(query) && !preset.category.toLowerCase().includes(query)) {
+                    continue;
                 }
                 
-                const label = document.createElement("span");
-                label.className = "preset-name";
-                label.innerText = name;
-                
-                item.appendChild(preview);
-                item.appendChild(label);
-                itemsContainer.appendChild(item);
-            });
-        }
+                // Outer flex item container
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'w-full flex items-center justify-between bg-slate-950/50 border border-slate-800 rounded-xl hover:border-red-500/20 hover:bg-red-600/5 transition duration-150 group';
 
-        function loadPreset(bitmap) {
-            if (currentMode === 'scrolling') {
-                // If in scrolling mode, switch to drawing mode first to allow editing
-                switchMode('drawing');
+                // Left part: clickable area to load as single main preset (clears old frames)
+                const loadBtn = document.createElement('button');
+                loadBtn.className = 'flex-grow py-2.5 px-3 flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-red-400 transition text-left overflow-hidden';
+                loadBtn.innerHTML = `
+                    <i class="fa-solid ${preset.icon} text-sm text-slate-500 group-hover:text-red-500 transition w-5 text-center flex-shrink-0"></i>
+                    <span class="truncate">${preset.name}</span>
+                `;
+                loadBtn.addEventListener('click', () => {
+                    isScrollMode = false;
+                    scrollModeToggle.checked = false;
+                    syncModeUI();
+                    
+                    spriteNameInput.value = key;
+                    spriteName = key;
+                    
+                    loadPreset(key);
+                });
+
+                // Right part: Append Frame button (+ Kare)
+                const appendBtn = document.createElement('button');
+                appendBtn.className = 'mr-2 py-1 px-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/50 text-emerald-400 rounded-lg text-[10px] font-bold transition flex items-center gap-1 shrink-0';
+                appendBtn.innerHTML = `<i class="fa-solid fa-plus text-[9px]"></i> Kare`;
+                appendBtn.title = "Bu şekli yeni bir kare olarak ekle";
+                appendBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent loading preset as a single clean frame
+                    appendPresetToFrames(key);
+                });
+
+                itemDiv.appendChild(loadBtn);
+                itemDiv.appendChild(appendBtn);
+                presetsContainer.appendChild(itemDiv);
             }
-            animationFrames[currentFrameIndex] = [...bitmap];
-            drawFrameOnGrid();
-            updateTimelineStrip();
-            updateGenerator();
         }
 
-        // Timeline Frame Management
-        function addFrame() {
-            const newFrame = [...animationFrames[currentFrameIndex]];
-            animationFrames.push(newFrame);
-            currentFrameIndex = animationFrames.length - 1;
-            drawFrameOnGrid();
-            updateTimelineStrip();
-            updateGenerator();
-        }
-
-        function deleteFrame(index, e) {
-            e.stopPropagation();
-            if (animationFrames.length <= 1) return;
-            animationFrames.splice(index, 1);
-            if (currentFrameIndex >= animationFrames.length) {
-                currentFrameIndex = animationFrames.length - 1;
+        // Append preset frames to existing animation sequence
+        function appendPresetToFrames(key) {
+            if (isScrollMode) {
+                isScrollMode = false;
+                scrollModeToggle.checked = false;
+                syncModeUI();
             }
-            drawFrameOnGrid();
-            updateTimelineStrip();
-            updateGenerator();
-        }
-
-        function selectFrame(index) {
-            currentFrameIndex = index;
-            drawFrameOnGrid();
-            updateTimelineStrip();
-        }
-
-        function updateTimelineStrip() {
-            const strip = document.getElementById("timeline-strip");
-            strip.innerHTML = '';
-            
-            animationFrames.forEach((frame, idx) => {
-                const item = document.createElement("div");
-                item.className = `timeline-frame ${idx === currentFrameIndex ? 'active' : ''}`;
-                item.onclick = () => selectFrame(idx);
-                
-                // Draw tiny grid inside timeline item
-                for (let r = 0; r < 8; r++) {
-                    for (let c = 0; c < 8; c++) {
-                        const dot = document.createElement("div");
-                        dot.className = "timeline-frame-mini-led";
-                        const bitVal = (frame[r] >> (7 - c)) & 0x01;
-                        if (bitVal === 1) dot.classList.add("active");
-                        item.appendChild(dot);
-                    }
-                }
-                
-                const label = document.createElement("div");
-                label.className = "timeline-frame-label";
-                label.innerText = idx + 1;
-                item.appendChild(label);
-                
-                const delBtn = document.createElement("button");
-                delBtn.className = "frame-delete-btn";
-                delBtn.innerHTML = "×";
-                delBtn.onclick = (e) => deleteFrame(idx, e);
-                item.appendChild(delBtn);
-                
-                strip.appendChild(item);
-            });
-        }
-
-        // Scrolling Animation engine (JS Simulation)
-        function startScrollingAnimation() {
             stopAnimation();
-            const scrollingActive = document.getElementById("scrolling-active").checked;
-            if (!scrollingActive) {
-                // If active checkbox is false, show static first character or empty grid
-                scrollingStep = 0;
-                renderScrollStep();
+
+            const preset = PRESETS[key];
+            const presetFrames = JSON.parse(JSON.stringify(preset.frames));
+
+            // Check if adding these frames exceeds max memory limit of 8 frames
+            if (frames.length + presetFrames.length > 8) {
+                showToast("Dahili hafıza için maksimum 8 kare sınırını aşamazsınız!", true);
                 return;
             }
 
-            scrollingStep = 0;
-            const text = scrollText.toUpperCase();
-            
-            // Precompute columns of the text
-            const textCols = [];
-            
-            // Add padding cols at beginning
-            for (let i = 0; i < 8; i++) textCols.push(0x00);
-            
-            // Get columns from character font mapping
-            for (let i = 0; i < text.length; i++) {
-                const char = text[i];
-                const charBytes = FONT[char] || FONT[' '];
-                
-                // Transpose row bytes to columns
-                for (let col = 0; col < 8; col++) {
-                    let colByte = 0;
-                    for (let row = 0; row < 8; row++) {
-                        const bit = (charBytes[row] >> (7 - col)) & 0x01;
-                        colByte |= (bit << row);
-                    }
-                    textCols.push(colByte);
-                }
-                // Thin space between characters
-                textCols.push(0x00);
+            // If we currently have just 1 single frame and it's completely empty (all 0), we replace it
+            const isFirstFrameEmpty = frames.length === 1 && frames[0].every(val => val === 0);
+
+            if (isFirstFrameEmpty) {
+                frames = presetFrames;
+            } else {
+                frames.push(...presetFrames);
             }
+
+            // Set dynamic C++ sprite name to show anim array if multiple frames exist
+            if (frames.length > 1) {
+                spriteNameInput.value = "Animasyon_Dizisi";
+                spriteName = "Animasyon_Dizisi";
+            }
+
+            currentFrameIndex = frames.length - 1; // set pointer to the newly appended frame
+            updateGridUI();
+            updateCodeOutput();
+            showToast(`${preset.name} başarıyla yeni kare olarak eklendi!`);
+        }
+
+        // Initialize presets list
+        renderPresets();
+
+        // Preset Search Listener
+        searchInput.addEventListener('input', (e) => {
+            renderPresets(e.target.value);
+        });
+
+        // Toggle LED state in custom design
+        function toggleLed(index) {
+            const row = Math.floor(index / 8);
+            const col = 7 - (index % 8); 
             
-            // Add padding cols at end
-            for (let i = 0; i < 8; i++) textCols.push(0x00);
-
-            isPlaying = true;
-            playInterval = setInterval(() => {
-                const leds = document.querySelectorAll(".led");
-                leds.forEach(led => {
-                    const r = parseInt(led.dataset.row);
-                    const c = parseInt(led.dataset.col);
-                    
-                    // Column indexing relative to scroll position
-                    const activeColIndex = scrollingStep + c;
-                    const colByte = textCols[activeColIndex] || 0;
-                    
-                    // Row bits from colByte
-                    const bitVal = (colByte >> r) & 0x01;
-                    
-                    if (bitVal === 1) led.classList.add("active");
-                    else led.classList.remove("active");
-                });
-                
-                scrollingStep = (scrollingStep + 1) % (textCols.length - 8);
-            }, 100);
+            frames[currentFrameIndex][row] ^= (1 << col);
+            updateGridUI();
+            updateCodeOutput();
         }
 
-        function toggleScrollingAnimation() {
-            startScrollingAnimation();
-            updateGenerator();
+        function clearGrid() {
+            if (isScrollMode) return;
+            frames[currentFrameIndex] = [0,0,0,0,0,0,0,0];
+            updateGridUI();
+            updateCodeOutput();
         }
 
-        function updateScrollingText() {
-            const input = document.getElementById("scrolling-text-input");
-            scrollText = input.value || " ";
-            startScrollingAnimation();
-            updateGenerator();
+        function fillGrid() {
+            if (isScrollMode) return;
+            frames[currentFrameIndex] = [255,255,255,255,255,255,255,255];
+            updateGridUI();
+            updateCodeOutput();
         }
 
-        // Draw static scroll step (when not active)
-        function renderScrollStep() {
-            const leds = document.querySelectorAll(".led");
-            const text = scrollText.toUpperCase();
-            const char = text[0] || ' ';
-            const charBytes = FONT[char] || FONT[' '];
+        // Mode Toggles & Inputs
+        scrollModeToggle.addEventListener('change', (e) => {
+            isScrollMode = e.target.checked;
+            stopAnimation();
+            syncModeUI();
+            if (isScrollMode) {
+                // Prepare Text for Scroll Simulation
+                scrollShiftOffset = 0;
+                scrollText = scrollTextInput.value.toUpperCase();
+                startAnimation();
+            } else {
+                frames = [ [0,0,0,0,0,0,0,0] ];
+                currentFrameIndex = 0;
+                updateGridUI();
+            }
+            updateCodeOutput();
+        });
+
+        scrollTextInput.addEventListener('input', (e) => {
+            scrollText = e.target.value.toUpperCase();
+            if (isScrollMode) {
+                scrollShiftOffset = 0;
+                if (!isPlaying) startAnimation();
+            }
+            updateCodeOutput();
+        });
+
+        function syncModeUI() {
+            if (isScrollMode) {
+                modeBadge.innerText = "Akan Yazı";
+                modeBadge.className = "text-[10px] bg-blue-500/20 text-blue-400 font-mono px-1.5 py-0.5 rounded uppercase font-bold";
+                basicGridControls.classList.add('opacity-40', 'pointer-events-none');
+                btnAddFrame.classList.add('opacity-40', 'pointer-events-none');
+            } else {
+                modeBadge.innerText = "Çizim Modu";
+                modeBadge.className = "text-[10px] bg-red-500/20 text-red-400 font-mono px-1.5 py-0.5 rounded uppercase font-bold";
+                basicGridControls.classList.remove('opacity-40', 'pointer-events-none');
+                btnAddFrame.classList.remove('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        // Rendering Grid based on current frame or Scrolling Text
+        function updateGridUI() {
+            const buttons = gridContainer.children;
+            let displayRows = [0,0,0,0,0,0,0,0];
+
+            if (isScrollMode) {
+                // Simulated Scrolling Logic
+                displayRows = generateScrollFrame(scrollText, scrollShiftOffset);
+                frameIndicator.innerText = "Canlı Yayın";
+            } else {
+                displayRows = frames[currentFrameIndex];
+                frameIndicator.innerText = `Kare ${currentFrameIndex + 1}/${frames.length}`;
+            }
+
+            for (let r = 0; r < 8; r++) {
+                const rowValue = displayRows[r];
+                for (let c = 0; c < 8; c++) {
+                    const mappedCol = 7 - c;
+                    const isLit = (rowValue & (1 << mappedCol)) !== 0;
+                    const index = r * 8 + c;
+                    const btn = buttons[index];
+                    
+                    if (isLit) {
+                        btn.className = 'led-lamp rounded-lg border text-sm font-bold flex items-center justify-center led-active';
+                        btn.innerText = "1"; // Show '1' inside active cells just like in the screenshot
+                    } else {
+                        btn.className = 'led-lamp rounded-lg border text-sm font-bold flex items-center justify-center led-inactive';
+                        btn.innerText = "0"; // Show '0' inside inactive cells just like in the screenshot
+                    }
+                }
+            }
+        }
+
+        // Generate 8 bytes from string and pixel shift offset
+        function generateScrollFrame(text, shift) {
+            let buffer = new Uint8Array(8); // Row buffers
+            // Padding around text
+            let fullText = " " + text + " ";
             
-            leds.forEach(led => {
-                const r = parseInt(led.dataset.row);
-                const c = parseInt(led.dataset.col);
-                const bitVal = (charBytes[r] >> (7 - c)) & 0x01;
-                
-                if (bitVal === 1) led.classList.add("active");
-                else led.classList.remove("active");
-            });
+            // 1 pixel shift increments
+            let charIndex = Math.floor(shift / 8);
+            let bitShift = shift % 8;
+
+            for (let r = 0; r < 8; r++) {
+                let rowByte = 0;
+                for (let col = 0; col < 8; col++) {
+                    let virtualCol = col + bitShift;
+                    let targetCharIdx = charIndex + Math.floor(virtualCol / 8);
+                    let targetBit = virtualCol % 8;
+
+                    let charVal = ' ';
+                    if (targetCharIdx < fullText.length) {
+                        charVal = fullText[targetCharIdx];
+                    }
+
+                    let fontBytes = FONT_MAP[charVal] || FONT_MAP[' '];
+                    let fontRowByte = fontBytes[r];
+
+                    // Check if bit is set in font byte
+                    // Font map columns are 7 to 0 (MSB left-most)
+                    let isBitSet = (fontRowByte & (1 << (7 - targetBit))) !== 0;
+                    if (isBitSet) {
+                        rowByte |= (1 << (7 - col));
+                    }
+                }
+                buffer[r] = rowByte;
+            }
+            return buffer;
         }
 
-        // Animation Player for Drawing Mode
-        function togglePlayAnimation() {
+        // Speed Slider Control
+        speedSlider.addEventListener('input', (e) => {
+            speed = parseInt(e.target.value);
+            speedDisplay.innerText = `${speed}ms`;
+            if (isPlaying) {
+                stopAnimation();
+                startAnimation();
+            }
+            updateCodeOutput();
+        });
+
+        // Animation Engines
+        function addFrame() {
+            if (isScrollMode) return;
+            if (frames.length >= 8) {
+                showToast("Dahili hafıza için maksimum 8 kare sınırına ulaştınız!", true);
+                return;
+            }
+            frames.push([...frames[currentFrameIndex]]);
+            currentFrameIndex = frames.length - 1;
+            updateGridUI();
+            updateCodeOutput();
+            showToast("Yeni kare kopyalanarak eklendi.");
+        }
+
+        function resetFrames() {
+            stopAnimation();
+            if (isScrollMode) {
+                scrollShiftOffset = 0;
+                updateGridUI();
+            } else {
+                frames = [ [0,0,0,0,0,0,0,0] ];
+                currentFrameIndex = 0;
+                updateGridUI();
+                updateCodeOutput();
+            }
+            showToast("Animasyon başlangıca sıfırlandı.");
+        }
+
+        function togglePlay() {
             if (isPlaying) {
                 stopAnimation();
             } else {
-                startPlayAnimation();
+                startAnimation();
             }
         }
 
-        function startPlayAnimation() {
-            stopAnimation();
+        function startAnimation() {
+            if (!isScrollMode && frames.length < 2) {
+                showToast("Hareket izlemek için lütfen 'Kare Ekle' butonuyla kare sayısını arttırın!", true);
+                return;
+            }
             isPlaying = true;
-            document.getElementById("play-btn").innerText = "Durdur";
-            document.getElementById("play-btn").classList.add("btn-accent");
+            playStatus.innerText = "Durdur";
+            playBtnIcon.className = "fa-solid fa-pause text-sm text-red-400";
             
-            playInterval = setInterval(() => {
-                currentFrameIndex = (currentFrameIndex + 1) % animationFrames.length;
-                drawFrameOnGrid();
-                updateTimelineStrip();
-            }, speedMs);
+            if (isScrollMode) {
+                let maxShift = (scrollText.length + 2) * 8;
+                playInterval = setInterval(() => {
+                    scrollShiftOffset = (scrollShiftOffset + 1) % maxShift;
+                    updateGridUI();
+                }, speed / 3); // Faster tick for smooth pixel scrolling
+            } else {
+                playInterval = setInterval(() => {
+                    currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+                    updateGridUI();
+                }, speed);
+            }
         }
 
         function stopAnimation() {
             isPlaying = false;
+            playStatus.innerText = "Oynat";
+            playBtnIcon.className = "fa-solid fa-play text-sm text-blue-400";
             if (playInterval) {
                 clearInterval(playInterval);
                 playInterval = null;
             }
-            document.getElementById("play-btn").innerText = "Oynat";
-            document.getElementById("play-btn").classList.remove("btn-accent");
+            updateGridUI();
         }
 
-        function resetAnimation() {
+        function loadPreset(key) {
             stopAnimation();
+            const preset = PRESETS[key];
+            frames = JSON.parse(JSON.stringify(preset.frames)); 
             currentFrameIndex = 0;
-            drawFrameOnGrid();
-            updateTimelineStrip();
+            updateGridUI();
+            updateCodeOutput();
+            showToast(`${preset.name} başarıyla simüle edildi.`);
         }
 
-        function updateSpeed() {
-            const select = document.getElementById("speed-select");
-            speedMs = parseInt(select.value);
-            if (isPlaying && currentMode === 'drawing') {
-                startPlayAnimation(); // restart with new speed
-            }
-            updateGenerator();
+        function formatByte(byteVal) {
+            return "B" + byteVal.toString(2).padStart(8, '0');
         }
 
-        // Code Generation Engine
-        function updateGenerator() {
-            const din = document.getElementById("din-select").value;
-            const cs = document.getElementById("cs-select").value;
-            const clk = document.getElementById("clk-select").value;
-            
-            // Update UI status bar values
-            document.getElementById("pin-din-val").innerText = `D${din}`;
-            document.getElementById("pin-cs-val").innerText = `D${cs}`;
-            document.getElementById("pin-clk-val").innerText = `D${clk}`;
+        // Generate Arduino C++ Code with Dynamic Sprite Name Variable
+        function updateCodeOutput() {
+            let code = `/*\n`;
+            code += ` * 8x8 LED MATRIX MAX7219 KÜTÜPHANESİZ SÜRÜCÜ KODU\n`;
+            code += ` * Tasarım ve Kod Üretici: ROBOTIST (https://robotist.fun)\n`;
+            code += ` * \n`;
+            code += ` * Pin Bağlantısı:\n`;
+            code += ` * VCC  ➔  5V\n`;
+            code += ` * GND  ➔  GND\n`;
+            code += ` * DIN  ➔  Pin ${dinPin} (Data)\n`;
+            code += ` * CS   ➔  Pin ${csPin} (Load)\n`;
+            code += ` * CLK  ➔  Pin ${clkPin} (Clock)\n`;
+            code += ` */\n\n`;
+            code += `const int DIN_PIN = ${dinPin};\n`;
+            code += `const int CS_PIN = ${csPin};\n`;
+            code += `const int CLK_PIN = ${clkPin};\n\n`;
 
-            let code = `// ROBOTIST 8x8 LED Matris Pro Stüdyo - Otomatik Üretilen Kod\n`;
-            code += `// VCC ➔ 5V  |  GND ➔ GND  |  DIN ➔ D${din}  |  CS ➔ D${cs}  |  CLK ➔ D${clk}\n`;
-            code += `// Entegre: MAX7219  |  Mod: ${currentMode === 'drawing' ? 'Kare Animasyon' : 'Akan Yazı'}\n`;
-            code += `// robotist.fun\n\n`;
-
-            code += `const int DIN_PIN = ${din};\n`;
-            code += `const int CS_PIN = ${cs};\n`;
-            code += `const int CLK_PIN = ${clk};\n\n`;
-
-            code += `// MAX7219 Kaydedici Adresleri\n`;
-            code += `const byte REG_NOOP        = 0x00;\n`;
-            code += `const byte REG_DIGIT0      = 0x01;\n`;
-            code += `const byte REG_DIGIT1      = 0x02;\n`;
-            code += `const byte REG_DIGIT2      = 0x03;\n`;
-            code += `const byte REG_DIGIT3      = 0x04;\n`;
-            code += `const byte REG_DIGIT4      = 0x05;\n`;
-            code += `const byte REG_DIGIT5      = 0x06;\n`;
-            code += `const byte REG_DIGIT6      = 0x07;\n`;
-            code += `const byte REG_DIGIT7      = 0x08;\n`;
-            code += `const byte REG_DECODEMODE  = 0x09;\n`;
-            code += `const byte REG_INTENSITY   = 0x0A;\n`;
-            code += `const byte REG_SCANLIMIT   = 0x0B;\n`;
-            code += `const byte REG_SHUTDOWN    = 0x0C;\n`;
-            code += `const byte REG_DISPLAYTEST = 0x0F;\n\n`;
-
-            if (currentMode === 'drawing') {
-                // Drawing/Animation Mode
-                const name = (document.getElementById("sprite-name-input").value || "Benim_Sprite")
-                    .replace(/[^A-Za-z0-9_]/g, '_');
+            if (isScrollMode) {
+                // Scrolling Text Code Generation
+                code += `// --- AKAN YAZI AYARLARI ---\n`;
+                code += `String akan_yazi = "${scrollText}"; \n`;
+                code += `const int kayma_hizi = ${Math.round(speed / 3)}; // Pixel bazlı kayma gecikmesi\n\n`;
                 
-                code += `// Toplam Kare Sayısı: ${animationFrames.length}\n`;
-                code += `const int FRAME_COUNT = ${animationFrames.length};\n`;
-                code += `const int ANIMATION_SPEED = ${speedMs}; // Gecikme (ms)\n\n`;
+                code += `// Standart ASCII Font Haritası (Kullanılan Karakterler İçin)\n`;
+                code += `const byte font[42][8] PROGMEM = {\n`;
                 
-                code += `const byte ${name}[FRAME_COUNT][8] = {\n`;
-                
-                animationFrames.forEach((frame, index) => {
-                    const rowHex = frame.map(b => "0x" + b.toString(16).toUpperCase().padStart(2, '0'));
-                    code += `  { ${rowHex.join(", ")} }${index < animationFrames.length - 1 ? ',' : ''} // Kare ${index + 1}\n`;
-                });
-                
+                // Keep order matching getFontIndex
+                const orderedChars = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.!?-+";
+                for (let cIdx = 0; cIdx < orderedChars.length; cIdx++) {
+                    const ch = orderedChars[cIdx];
+                    const bytes = FONT_MAP[ch] || FONT_MAP[' '];
+                    code += `  { `;
+                    for (let b = 0; b < 8; b++) {
+                        code += `0x${bytes[b].toString(16).toUpperCase().padStart(2, '0')}${b < 7 ? ', ' : ''}`;
+                    }
+                    code += ` }${cIdx < orderedChars.length - 1 ? ',' : ''} // '${ch === ' ' ? 'Space' : ch}'\n`;
+                }
                 code += `};\n\n`;
 
-                code += `void sendByte(byte reg, byte data) {\n`;
+                code += `void maxTransfer(byte adres, byte veri) {\n`;
                 code += `  digitalWrite(CS_PIN, LOW);\n`;
-                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, reg);\n`;
-                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, data);\n`;
+                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, adres);\n`;
+                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, veri);\n`;
                 code += `  digitalWrite(CS_PIN, HIGH);\n`;
                 code += `}\n\n`;
 
-                code += `void initMAX7219() {\n`;
-                code += `  sendByte(REG_DECODEMODE, 0x00);  // Decode mod kapalı (Direkt LED kontrolü)\n`;
-                code += `  sendByte(REG_INTENSITY, 0x03);   // Parlaklık seviyesi (0-15 arası)\n`;
-                code += `  sendByte(REG_SCANLIMIT, 0x07);   // Tarama limiti: 8 satırın hepsi aktif\n`;
-                code += `  sendByte(REG_SHUTDOWN, 0x01);    // Güç açık (Normal çalışma)\n`;
-                code += `  sendByte(REG_DISPLAYTEST, 0x00); // Test modu kapalı\n`;
-                code += `}\n\n`;
-
-                code += `void showFrame(int frameIdx) {\n`;
-                code += `  for (int row = 0; row < 8; row++) {\n`;
-                code += `    sendByte(row + 1, ${name}[frameIdx][row]);\n`;
-                code += `  }\n`;
+                code += `int getFontIndex(char c) {\n`;
+                code += `  if (c == ' ') return 0;\n`;
+                code += `  if (c >= 'A' && c <= 'Z') return (c - 'A') + 1;\n`;
+                code += `  if (c >= '0' && c <= '9') return (c - '0') + 27;\n`;
+                code += `  if (c == '.') return 37;\n`;
+                code += `  if (c == '!') return 38;\n`;
+                code += `  if (c == '?') return 39;\n`;
+                code += `  if (c == '-') return 40;\n`;
+                code += `  if (c == '+') return 41;\n`;
+                code += `  return 0;\n`;
                 code += `}\n\n`;
 
                 code += `void setup() {\n`;
                 code += `  pinMode(DIN_PIN, OUTPUT);\n`;
                 code += `  pinMode(CS_PIN, OUTPUT);\n`;
                 code += `  pinMode(CLK_PIN, OUTPUT);\n`;
-                code += `  \n`;
-                code += `  digitalWrite(CS_PIN, HIGH);\n`;
-                code += `  initMAX7219();\n`;
-                code += `  \n`;
-                code += `  // İlk kareyi yükle\n`;
-                code += `  showFrame(0);\n`;
+                code += `  delay(100);\n\n`;
+                code += `  maxTransfer(0x09, 0x00); // Matris Modu\n`;
+                code += `  maxTransfer(0x0A, 0x03); // Parlaklık Seviyesi\n`;
+                code += `  maxTransfer(0x0B, 0x07); // 8 Satır aktif\n`;
+                code += `  maxTransfer(0x0C, 0x01); // Uyandır\n`;
+                code += `  maxTransfer(0x0F, 0x00); // Test kapalı\n\n`;
+                code += `  for (int i = 1; i <= 8; i++) maxTransfer(i, 0x00); // Temizle\n`;
                 code += `}\n\n`;
 
                 code += `void loop() {\n`;
-                code += `  // Kareleri sırayla göster\n`;
-                code += `  for (int f = 0; f < FRAME_COUNT; f++) {\n`;
-                code += `    showFrame(f);\n`;
-                code += `    delay(ANIMATION_SPEED);\n`;
-                code += `  }\n`;
-                code += `}\n`;
-            } else {
-                // Scrolling Text Mode
-                const cleanText = scrollText.replace(/[^A-Za-z0-9 .,!?\-:=+]/g, '').toUpperCase();
-                
-                code += `// Akan Yazı Metni: "${cleanText}"\n`;
-                code += `const char message[] = "${cleanText}";\n`;
-                code += `const int SCROLL_SPEED = 100; // Kayma hızı (ms)\n\n`;
-
-                // Add compact character font map to code
-                code += `// ASCII 32 (' ') ile 90 ('Z') arası temel karakterlerin yazı tipi\n`;
-                code += `const byte font[][8] PROGMEM = {\n`;
-                
-                // Generate code only for characters present in the message to optimize Arduino Flash memory
-                const charsUsed = new Set();
-                for (let i = 0; i < cleanText.length; i++) charsUsed.add(cleanText[i]);
-                charsUsed.add(' '); // Always have space
-
-                // Write character structures
-                code += `  // Kütüphanesiz Font Haritası\n`;
-                
-                const charIndices = {};
-                let idx = 0;
-                
-                charsUsed.forEach(char => {
-                    const bytes = FONT[char] || FONT[' '];
-                    const hexArray = bytes.map(b => "0x" + b.toString(16).toUpperCase().padStart(2, '0'));
-                    code += `  { ${hexArray.join(", ")} }, // Index ${idx}: '${char}'\n`;
-                    charIndices[char] = idx;
-                    idx++;
-                });
-                
-                code += `};\n\n`;
-
-                // Render lookup function
-                code += `// Karakterin indexini döndüren yardımcı fonksiyon\n`;
-                code += `int getCharIndex(char c) {\n`;
-                charsUsed.forEach((char, charIdx) => {
-                    const escaped = char === '\'' || char === '\\' ? '\\' + char : char;
-                    code += `  if (c == '${escaped}') return ${charIndices[char]};\n`;
-                });
-                code += `  return 0; // Bulunamayanlar için boşluk karakteri\n`;
-                code += `}\n\n`;
-
-                code += `void sendByte(byte reg, byte data) {\n`;
-                code += `  digitalWrite(CS_PIN, LOW);\n`;
-                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, reg);\n`;
-                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, data);\n`;
-                code += `  digitalWrite(CS_PIN, HIGH);\n`;
-                code += `}\n\n`;
-
-                code += `void initMAX7219() {\n`;
-                code += `  sendByte(REG_DECODEMODE, 0x00);\n`;
-                code += `  sendByte(REG_INTENSITY, 0x03);\n`;
-                code += `  sendByte(REG_SCANLIMIT, 0x07);\n`;
-                code += `  sendByte(REG_SHUTDOWN, 0x01);\n`;
-                code += `  sendByte(REG_DISPLAYTEST, 0x00);\n`;
-                code += `}\n\n`;
-
-                code += `// MAX7219 üzerine bir satırı yazar\n`;
-                code += `byte getFontRow(char c, int row) {\n`;
-                code += `  int idx = getCharIndex(c);\n`;
-                code += `  return pgm_read_byte(&(font[idx][row]));\n`;
-                code += `}\n\n`;
-
-                code += `void scrollText(const char* msg) {\n`;
-                code += `  int len = strlen(msg);\n`;
-                code += `  // Toplam kayma adım sayısı (metin genişliği + 8 sütun boşluk)\n`;
-                code += `  int totalSteps = (len + 1) * 8;\n\n`;
-                code += `  for (int step = 0; step < totalSteps; step++) {\n`;
-                code += `    int charIndex = step / 8;\n`;
-                code += `    int shift = step % 8;\n\n`;
+                code += `  String tam_metin = " " + akan_yazi + " ";\n`;
+                code += `  int metin_boyu = tam_metin.length();\n\n`;
+                code += `  for (int shift = 0; shift < (metin_boyu * 8); shift++) {\n`;
+                code += `    int charIndex = shift / 8;\n`;
+                code += `    int bitShift = shift % 8;\n\n`;
                 code += `    for (int r = 0; r < 8; r++) {\n`;
-                code += `      byte c1 = (charIndex < len) ? getFontRow(msg[charIndex], r) : 0;\n`;
-                code += `      byte c2 = (charIndex + 1 < len) ? getFontRow(msg[charIndex + 1], r) : 0;\n`;
-                code += `      \n`;
-                code += `      // İki karakterin satır piksellerini kaydırarak birleştir\n`;
-                code += `      byte combined = (c1 << shift) | (c2 >> (8 - shift));\n`;
-                code += `      sendByte(r + 1, combined);\n`;
+                code += `      byte rowByte = 0;\n`;
+                code += `      for (int col = 0; col < 8; col++) {\n`;
+                code += `        int virtualCol = col + bitShift;\n`;
+                code += `        int targetCharIdx = charIndex + (virtualCol / 8);\n`;
+                code += `        int targetBit = virtualCol % 8;\n\n`;
+                code += `        char charVal = ' ';\n`;
+                code += `        if (targetCharIdx < metin_boyu) {\n`;
+                code += `          charVal = tam_metin[targetCharIdx];\n`;
+                code += `        }\n\n`;
+                code += `        int fontIdx = getFontIndex(charVal);\n`;
+                code += `        byte fontRowByte = pgm_read_byte(&(font[fontIdx][r]));\n`;
+                code += `        bool isBitSet = (fontRowByte & (1 << (7 - targetBit))) != 0;\n`;
+                code += `        if (isBitSet) {\n`;
+                code += `          rowByte |= (1 << (7 - col));\n`;
+                code += `        }\n`;
+                code += `      }\n`;
+                code += `      maxTransfer(r + 1, rowByte);\n`;
                 code += `    }\n`;
-                code += `    delay(SCROLL_SPEED);\n`;
+                code += `    delay(kayma_hizi);\n`;
                 code += `  }\n`;
+                code += `}\n`;
+
+            } else {
+                // Custom Static/Animated Design Code
+                if (frames.length === 1) {
+                    code += `// Sabit Tasarım Deseni (1=Açık, 0=Kapalı)\n`;
+                    code += `const byte ${spriteName}[8] = {\n`;
+                    for (let i = 0; i < 8; i++) {
+                        code += `  ${formatByte(frames[0][i])}${i < 7 ? ',' : ''}\n`;
+                    }
+                    code += `};\n\n`;
+                } else {
+                    code += `// Çok Kareli Animasyon Çizimi (Toplam: ${frames.length} kare)\n`;
+                    code += `const byte ${spriteName}[${frames.length}][8] = {\n`;
+                    for (let f = 0; f < frames.length; f++) {
+                        code += `  {\n`;
+                        for (let i = 0; i < 8; i++) {
+                            code += `    ${formatByte(frames[f][i])}${i < 7 ? ',' : ''}\n`;
+                        }
+                        code += `  }${f < frames.length - 1 ? ',' : ''}\n`;
+                    }
+                    code += `};\n\n`;
+                }
+
+                code += `void maxTransfer(byte adres, byte veri) {\n`;
+                code += `  digitalWrite(CS_PIN, LOW);\n`;
+                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, adres);\n`;
+                code += `  shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, veri);\n`;
+                code += `  digitalWrite(CS_PIN, HIGH);\n`;
                 code += `}\n\n`;
 
                 code += `void setup() {\n`;
                 code += `  pinMode(DIN_PIN, OUTPUT);\n`;
                 code += `  pinMode(CS_PIN, OUTPUT);\n`;
                 code += `  pinMode(CLK_PIN, OUTPUT);\n`;
-                code += `  \n`;
-                code += `  digitalWrite(CS_PIN, HIGH);\n`;
-                code += `  initMAX7219();\n`;
-                code += `  \n`;
-                code += `  // Matrisi temizle\n`;
-                code += `  for (int r = 0; r < 8; r++) sendByte(r + 1, 0x00);\n`;
+                code += `  delay(100);\n\n`;
+                code += `  maxTransfer(0x09, 0x00); // Decode modu kapalı\n`;
+                code += `  maxTransfer(0x0A, 0x03); // Parlaklık ayarı (0-15)\n`;
+                code += `  maxTransfer(0x0B, 0x07); // 8 satırı da tara\n`;
+                code += `  maxTransfer(0x0C, 0x01); // Uyandır\n`;
+                code += `  maxTransfer(0x0F, 0x00); // Test modu kapalı\n\n`;
+                code += `  for (int i = 1; i <= 8; i++) {\n`;
+                code += `    maxTransfer(i, 0x00); // Başlangıç temizliği\n`;
+                code += `  }\n`;
                 code += `}\n\n`;
 
                 code += `void loop() {\n`;
-                code += `  scrollText(message);\n`;
-                code += `  delay(1000); // Yeniden başlamadan önce bekle\n`;
+                if (frames.length === 1) {
+                    code += `  for (int i = 0; i < 8; i++) {\n`;
+                    code += `    maxTransfer(i + 1, ${spriteName}[i]);\n`;
+                    code += `  }\n`;
+                    code += `  while(true); // İşlemciyi kilitleyerek sabit tutar\n`;
+                } else {
+                    code += `  for (int f = 0; f < ${frames.length}; f++) {\n`;
+                    code += `    for (int i = 0; i < 8; i++) {\n`;
+                    code += `      maxTransfer(i + 1, ${spriteName}[f][i]);\n`;
+                    code += `    }\n`;
+                    code += `    delay(${speed}); // Kare gecikme süresi\n`;
+                    code += `  }\n`;
+                }
                 code += `}\n`;
             }
 
-            // Write to code element with simple escaping
-            document.getElementById("code-output").innerText = code;
+            codeBox.value = code;
         }
 
-        // Copy Code to Clipboard
-        function copyCode() {
-            const codeText = document.getElementById("code-output").innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                const toast = document.getElementById("toast");
-                toast.classList.add("show");
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                }, 2000);
-            });
+        // Clipboard Copy Utility
+        function copyToClipboard() {
+            const copyText = document.getElementById("code-box");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+            document.execCommand('copy');
+            showToast("Arduino kodu başarıyla panoya kopyalandı!");
         }
+
+        // Display Toast Alerts
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            const msgSpan = document.getElementById("toast-message");
+            msgSpan.innerText = message;
+            
+            if (isError) {
+                toast.classList.remove("bg-emerald-500");
+                toast.classList.add("bg-red-500");
+            } else {
+                toast.classList.remove("bg-red-500");
+                toast.classList.add("bg-emerald-500");
+            }
+            
+            toast.className = toast.className.replace("opacity-0 pointer-events-none", "opacity-100 pointer-events-auto");
+            setTimeout(() => {
+                toast.className = toast.className.replace("opacity-100 pointer-events-auto", "opacity-0 pointer-events-none");
+            }, 2500);
+        }
+
+        // Run Initial Updates
+        updateGridUI();
+        updateCodeOutput();
     </script>
 </body>
 </html>
