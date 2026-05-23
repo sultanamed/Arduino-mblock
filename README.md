@@ -28,6 +28,20 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 | **16** | [HC-SR501 PIR Sensörü ile Hırsız Alarmı](./16-PIR_Hirsiz_Alarm) | 🟡 Orta Seviye | [İncele](./16-PIR_Hirsiz_Alarm) |
 | **17** | [Alev Sensörü ile Yangın Alarmı](./17-Alev_Sensoru) | 🟡 Orta Seviye | [İncele](./17-Alev_Sensoru) |
 | **18** | [MAX7219 Entegresi ile 8x8 LED Matris](./18-8x8_Matrix) | 🔴 İleri Seviye | [İncele](./18-8x8_Matrix) |
+| **19** | [Potansiyometre ile RGB LED Kontrolü](./19-Potansiyometre_RGB_LED) | 🟢 Başlangıç | [İncele](./19-Potansiyometre_RGB_LED) |
+| **20** | [LDR ile Işık Seviyesi Ölçümü](./20-LDR_Isik_Seviyesi) | 🟢 Başlangıç | [İncele](./20-LDR_Isik_Seviyesi) |
+| **21** | [I2C LCD Ekran Kullanımı](./21-LCD_I2C_Ekran) | 🟡 Orta Seviye | [İncele](./21-LCD_I2C_Ekran) |
+| **22** | [I2C LCD Türkçe Karakter Uygulaması](./22-LCD_I2C_Turkce) | 🟡 Orta Seviye | [İncele](./22-LCD_I2C_Turkce) |
+| **23** | [Su Seviyesi ve Yağmur Alarmı](./23-Su_Seviye_Yagmur_Alarmi) | 🟡 Orta Seviye | [İncele](./23-Su_Seviye_Yagmur_Alarmi) |
+| **24** | [Su Seviyesi LCD Ekran Göstergesi](./24-Su_Seviyesi_LCD_Ekran) | 🟡 Orta Seviye | [İncele](./24-Su_Seviyesi_LCD_Ekran) |
+| **25** | [Toprak Nem Seviyesi LED Kontrolü](./25-Toprak_Nem_LED_Kontrol) | 🟡 Orta Seviye | [İncele](./25-Toprak_Nem_LED_Kontrol) |
+| **26** | [Toprak Nemi LCD Ekran Göstergesi](./26-Toprak_Nemi_LCD_Ekran) | 🟡 Orta Seviye | [İncele](./26-Toprak_Nemi_LCD_Ekran) |
+| **27** | [7 Segment Display 0-9 Sayıcı](./27-7_Segment_Sayici) | 🟡 Orta Seviye | [İncele](./27-7_Segment_Sayici) |
+| **28** | [7 Segment Display Scoreboard Butonlu](./28-7_Segment_Scoreboard) | 🟡 Orta Seviye | [İncele](./28-7_Segment_Scoreboard) |
+| **29** | [MQ-5 Gaz Sensörü ile Doğal Gaz Alarmı](./29-Gaz_Alarmi_MQ5) | 🟡 Orta Seviye | [İncele](./29-Gaz_Alarmi_MQ5) |
+| **30** | [Servo Motor Uygulamaları](./30-Servo_Motor_Uygulamalari) | 🟡 Orta Seviye | [İncele](./30-Servo_Motor_Uygulamalari) |
+| **31** | [LDR ile Servo Motor Kontrolü](./31-LDR_ile_Servo_Motor) | 🟡 Orta Seviye | [İncele](./31-LDR_ile_Servo_Motor) |
+| **32** | [Mesafe Sensörlü Servo (Akıllı Bariyer)](./32-Mesafe_Sensorlu_Servo) | 🟡 Orta Seviye | [İncele](./32-Mesafe_Sensorlu_Servo) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 
