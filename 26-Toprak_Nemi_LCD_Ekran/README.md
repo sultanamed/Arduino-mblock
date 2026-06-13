@@ -60,7 +60,7 @@ mBlock 5 ile bu devreyi kurarken:
 3.  `eğer ise` blokları yardımıyla `nem` değeri 750'den büyükse alt satıra `"Kuru. Lütfen Sula"`, 450 ile 750 arasındaysa `"Nem: Normal"`, 450'den küçükse `"Nem: Yüksek"` yazdırın.
 4.  Çocukların sensör kalibrasyonu yapabilmesi için üst satıra her zaman `nem` değişkeninin sayısal değerini yazdırın.
 
-![mBlock Aygıtlar Blokları](./images/mblock_3.jpg)
+![mBlock Aygıtlar Blokları](./images/mblock_3.png)
 ![mBlock Kukla Ekranı](./images/mblock_4.jpg)
 
 ---
