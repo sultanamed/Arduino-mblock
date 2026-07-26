@@ -1,33 +1,24 @@
 # Akış — PDF Hızlı Okuma
 
-Mac / iPad tabletinizde PDF yükleyip **RSVP** tekniğiyle hızlı okumanızı sağlayan uygulama.
+Mac / iPad tabletinizde PDF yükleyip **RSVP** tekniğiyle hızlı okuma. **Terminal gerekmez.**
 
-## Terminal yoksa (önerilen)
+## Hemen aç (Safari)
 
-Safari’de şu linki aç — kurulum yok:
+Bu linke dokun:
 
-**https://cdn.jsdelivr.net/gh/sultanamed/Arduino-mblock@cursor/pdf-speed-reader-7dcc/hizli-okuma/akis.html**
+**https://htmlpreview.github.io/?https://raw.githubusercontent.com/sultanamed/Arduino-mblock/cursor/pdf-speed-reader-7dcc/hizli-okuma/akis.html**
 
-İstersen Safari’de **Paylaş → Ana Ekrana Ekle** ile uygulama gibi kullan.
+İstersen Safari’de **Paylaş → Ana Ekrana Ekle**.
 
-GitHub Pages açıldıktan sonra kalıcı adres:
+## Kalıcı adres (bir kerelik ayar)
 
-**https://sultanamed.github.io/Arduino-mblock/**
+GitHub → repo **Settings → Pages → Source: GitHub Actions** seç.
+Sonra adres: `https://sultanamed.github.io/Arduino-mblock/`
 
 ## Özellikler
 
-- PDF yükleme (dosya seç)
-- Kelime kelime RSVP + ORP (odak harfi)
-- 100–800 WPM hız
-- 1–3 kelimelik grup
+- PDF yükle → kelime kelime oku
+- 100–800 WPM, 1–3 kelime grup
 - Dosya cihazında kalır
 
-## Geliştirici (opsiyonel)
-
-```bash
-cd hizli-okuma
-npm install
-npm run dev
-```
-
-Tek dosya sürümü: `akis.html` (terminal / npm gerekmez).
+Tek dosya: `akis.html`
