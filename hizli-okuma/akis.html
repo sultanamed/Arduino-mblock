@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0c1612" />
+  <meta name="description" content="PDF yükle, RSVP ile hızlı oku. Terminal gerekmez." />
+  <title>Akış — PDF Hızlı Okuma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c1612;
+      --bg-elevated: #1a2c24;
+      --ink: #f3ebe0;
+      --muted: #93a399;
+      --accent: #e8a54b;
+      --accent-deep: #c4842f;
+      --orp: #ff6b4a;
+      --line: rgba(243, 235, 224, 0.14);
+      --danger: #ff8a7a;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --font-brand: 'Syne', sans-serif;
+      --font-ui: 'Manrope', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      min-height: 100dvh;
+      font-family: var(--font-ui);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 700px at 80% -10%, rgba(232, 165, 75, 0.16), transparent 55%),
+        radial-gradient(900px 600px at 0% 100%, rgba(70, 120, 95, 0.22), transparent 50%),
+        linear-gradient(165deg, #0a1310 0%, #0c1612 45%, #101c17 100%);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    .screen { display: none; min-height: 100dvh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: calc(32px + var(--safe-top)) 24px calc(40px + var(--safe-bottom));
+    }
+    .hero-inner {
+      width: min(640px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    .brand {
+      margin: 0;
+      font-family: var(--font-brand);
+      font-weight: 800;
+      font-size: clamp(3.2rem, 10vw, 5.4rem);
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+    }
+    .brand-sm { font-size: 1.35rem; letter-spacing: -0.03em; }
+    .hero-title {
+      margin: 0;
+      font-family: var(--font-brand);
+      font-weight: 700;
+      font-size: clamp(1.35rem, 3.6vw, 1.85rem);
+      line-height: 1.25;
+      max-width: 18ch;
+      letter-spacing: -0.02em;
+    }
+    .hero-sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.55;
+      max-width: 36ch;
+    }
+    .dropzone {
+      margin-top: 0.4rem;
+      min-height: 190px;
+      padding: 2rem 1.5rem;
+      border: 1.5px dashed rgba(232, 165, 75, 0.45);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(232, 165, 75, 0.08), rgba(26, 44, 36, 0.55));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      text-align: center;
+      transition: border-color .2s, transform .2s;
+      touch-action: manipulation;
+    }
+    .dropzone:hover, .dropzone.dragging, .dropzone:focus-visible {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .dropzone.loading { opacity: 0.7; pointer-events: none; }
+    .dropzone strong { font-size: 1.15rem; }
+    .dropzone span { color: var(--muted); font-size: 0.92rem; }
+    .drop-icon { color: var(--accent); margin-bottom: 0.2rem; }
+    .error {
+      margin: 0;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: rgba(255, 107, 74, 0.12);
+      border: 1px solid rgba(255, 107, 74, 0.35);
+      color: var(--danger);
+      font-size: 0.95rem;
+      display: none;
+    }
+    .error.show { display: block; }
+    .demo-btn, .ghost-btn {
+      align-self: flex-start;
+      min-height: 48px;
+      padding: 0.75rem 1.15rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(26, 44, 36, 0.8);
+      font-weight: 600;
+    }
+    .demo-btn:hover, .ghost-btn:hover,
+    .demo-btn:focus-visible, .ghost-btn:focus-visible {
+      border-color: rgba(232, 165, 75, 0.55);
+      background: rgba(232, 165, 75, 0.1);
+      outline: none;
+    }
+    .hints {
+      margin: 0.3rem 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 0.92rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .hints li::before {
+      content: '';
+      display: inline-block;
+      width: 0.45rem;
+      height: 0.45rem;
+      margin-right: 0.55rem;
+      border-radius: 50%;
+      background: var(--accent);
+      vertical-align: middle;
+      box-shadow: 0 0 0 3px rgba(232, 165, 75, 0.15);
+    }
+
+    /* Reader */
+    .reader {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: calc(16px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));
+      gap: 0.75rem;
+      flex: 1;
+    }
+    .reader-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .reader-meta { text-align: right; min-width: 0; }
+    .file-name {
+      margin: 0.15rem 0 0;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: min(55vw, 360px);
+      margin-left: auto;
+    }
+    .file-stats { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.85rem; }
+    .stage {
+      flex: 1;
+      min-height: min(48vh, 360px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(232, 165, 75, 0.08), transparent 55%),
+        linear-gradient(180deg, rgba(18, 32, 26, 0.9), rgba(12, 22, 18, 0.95));
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      position: relative;
+    }
+    .guides {
+      position: absolute;
+      inset: 18% 8% 22%;
+      pointer-events: none;
+    }
+    .guide-v {
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(255, 107, 74, 0.55), transparent);
+    }
+    .guide-h {
+      position: absolute;
+      left: 0; right: 0;
+      top: 58%;
+      height: 1px;
+      background: rgba(243, 235, 224, 0.12);
+    }
+    .word-wrap {
+      width: min(100%, 720px);
+      padding: 2rem 1rem 2.4rem;
+      z-index: 1;
+    }
+    .word-rsvp {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: baseline;
+      width: 100%;
+      font-size: clamp(2.4rem, 8vw, 4.4rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      animation: word-in 0.12s ease-out;
+    }
+    .word-before { text-align: right; }
+    .word-orp { color: var(--orp); text-align: center; min-width: 0.65ch; }
+    .word-after { text-align: left; }
+    .word-chunk {
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      font-weight: 600;
+      text-align: center;
+      animation: word-in 0.14s ease-out;
+    }
+    .word-empty { color: var(--muted); text-align: center; font-size: 1.1rem; }
+    @keyframes word-in {
+      from { opacity: 0; transform: translateY(6px) scale(0.985); }
+      to { opacity: 1; transform: none; }
+    }
+    .progress-wrap { display: flex; flex-direction: column; gap: 0.35rem; }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(243, 235, 224, 0.12);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid #1a2c24;
+      box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .controls { display: flex; flex-direction: column; gap: 1rem; padding-top: 0.3rem; }
+    .transport { display: flex; justify-content: center; align-items: center; gap: 0.85rem; }
+    .icon-btn {
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+    }
+    .play-btn {
+      min-width: 148px;
+      min-height: 56px;
+      padding: 0.85rem 1.6rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f0b45a, var(--accent-deep));
+      color: #1a1208;
+      font-weight: 800;
+      font-size: 1.05rem;
+      box-shadow: 0 10px 28px rgba(196, 132, 47, 0.35);
+    }
+    .sliders {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1rem;
+    }
+    .slider-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding: 0.85rem 1rem;
+      border-radius: 16px;
+      background: rgba(26, 44, 36, 0.7);
+      border: 1px solid var(--line);
+    }
+    .slider-field span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-field strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .shortcuts {
+      margin: 0;
+      text-align: center;
+      color: rgba(147, 163, 153, 0.85);
+      font-size: 0.82rem;
+    }
+    @media (max-width: 720px) {
+      .reader-top { flex-direction: column; align-items: stretch; }
+      .reader-meta { text-align: left; }
+      .file-name { margin-left: 0; max-width: 100%; }
+      .sliders { grid-template-columns: 1fr; }
+      .hints { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <section id="uploadScreen" class="screen hero active">
+    <div class="hero-inner">
+      <p class="brand">Akış</p>
+      <h1 class="hero-title">PDF’ini yükle, gözün kelimeleri yakalasın.</h1>
+      <p class="hero-sub">RSVP tekniğiyle metin tek tek akar — tablette hızını sen ayarla. Terminal yok, sadece Safari.</p>
+
+      <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="PDF yükle">
+        <div class="drop-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M20 8v16M20 8l-6 6M20 8l6 6M8 28v2a2 2 0 002 2h20a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <strong id="dropLabel">PDF seç</strong>
+        <span>Dosya tabletinizde kalır · internete yüklenmez</span>
+      </div>
+      <input id="fileInput" type="file" accept="application/pdf,.pdf" hidden />
+
+      <p id="error" class="error"></p>
+      <button type="button" class="demo-btn" id="demoBtn">Önce örnek metinle dene</button>
+
+      <ul class="hints">
+        <li>Kelime kelime (RSVP) veya 2–3’lü grup</li>
+        <li>100–800 WPM hız kontrolü</li>
+        <li>Ana Ekrana Ekle → uygulama gibi kullan</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="readerScreen" class="screen reader">
+    <header class="reader-top">
+      <button type="button" class="ghost-btn" id="resetBtn">Yeni PDF</button>
+      <div class="reader-meta">
+        <p class="brand brand-sm">Akış</p>
+        <p class="file-name" id="fileName">—</p>
+        <p class="file-stats" id="fileStats">—</p>
+      </div>
+    </header>
+
+    <div class="stage" id="stage">
+      <div class="guides" aria-hidden="true"><span class="guide-v"></span><span class="guide-h"></span></div>
+      <div class="word-wrap" id="wordWrap"><div class="word-empty">Başlamak için oynat</div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <input id="progress" class="progress" type="range" min="0" max="0" value="0" aria-label="İlerleme" />
+      <div class="progress-labels">
+        <span id="progressLeft">0 / 0</span>
+        <span id="progressRight">0%</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="transport">
+        <button type="button" class="icon-btn" id="backBtn" aria-label="Geri">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M19 12H9M11 7l-5 5 5 5M19 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="restartBtn" aria-label="Baştan">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 1 2.3 5.5M4 12V7M4 12h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="play-btn" id="playBtn">Oynat</button>
+        <button type="button" class="icon-btn" id="fwdBtn" aria-label="İleri">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h10M13 7l5 5-5 5M5 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="sliders">
+        <label class="slider-field">
+          <span>Hız <strong id="wpmLabel">280 WPM</strong></span>
+          <input id="wpm" type="range" min="100" max="800" step="10" value="280" />
+        </label>
+        <label class="slider-field">
+          <span>Grup <strong id="chunkLabel">1 kelime</strong></span>
+          <input id="chunk" type="range" min="1" max="3" step="1" value="1" />
+        </label>
+      </div>
+      <p class="shortcuts">Ekrana dokun: oynat/duraklat</p>
+    </div>
+  </section>
+
+  <script type="module">
+    const DEMO_TEXT = `Hızlı okuma, gözün satır boyunca duraksamalarını azaltıp anlamı daha geniş parçalar halinde yakalamayı hedefler. RSVP tekniğinde kelimeler tek tek, ekranın ortasında belirir. Gözün odak noktası sabit kalır; beyin kelimeyi tanımak için gereken süreyi kısaltır. İdeal hız kişiye ve metne göre değişir. Yeni başlayanlar için 200–300 WPM iyi bir başlangıçtır. Anladığınızı koruyarak kademeli artırın. Noktalama işaretlerinde kısa bir duraklama, anlamın yerleşmesine yardım eder. Akış uygulaması PDF dosyanızdaki metni cihazınızda çıkarır. Dosyanız sunucuya gönderilmez. Okumaya hazır olduğunuzda oynata basın, hızı kaydırıcıdan ayarlayın.`
+
+    const $ = (id) => document.getElementById(id)
+    const uploadScreen = $('uploadScreen')
+    const readerScreen = $('readerScreen')
+    const dropzone = $('dropzone')
+    const fileInput = $('fileInput')
+    const dropLabel = $('dropLabel')
+    const errorEl = $('error')
+    const wordWrap = $('wordWrap')
+
+    let words = []
+    let tokens = []
+    let index = 0
+    let playing = false
+    let timer = null
+    let wpm = 280
+    let chunkSize = 1
+    let meta = { fileName: '', pageCount: 0, wordCount: 0 }
+
+    function getOrpIndex(word) {
+      const len = word.length
+      if (len <= 1) return 0
+      if (len <= 5) return 1
+      if (len <= 9) return 2
+      if (len <= 13) return 3
+      return 4
+    }
+    function tokenize(text) {
+      return text.replace(/\r\n/g, '\n').split(/\s+/).map((w) => w.trim()).filter(Boolean)
+    }
+    function chunkWords(list, size) {
+      if (size <= 1) return list.slice()
+      const out = []
+      for (let i = 0; i < list.length; i += size) out.push(list.slice(i, i + size).join(' '))
+      return out
+    }
+    function dwellMultiplier(token) {
+      if (/[.!?…]["'”’)]*$/.test(token)) return 2.2
+      if (/[,;:]["'”’)]*$/.test(token)) return 1.5
+      if (token.length > 12) return 1.35
+      if (token.length > 8) return 1.15
+      return 1
+    }
+    function intervalMs() {
+      return Math.max(40, Math.round(60000 / Math.max(60, wpm)))
+    }
+    function formatDuration(minutes) {
+      if (!Number.isFinite(minutes) || minutes <= 0) return '—'
+      if (minutes < 1) return `${Math.max(1, Math.round(minutes * 60))} sn`
+      if (minutes < 60) return `${Math.round(minutes)} dk`
+      const h = Math.floor(minutes / 60)
+      const m = Math.round(minutes % 60)
+      return `${h} sa ${m} dk`
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg
+      errorEl.classList.toggle('show', Boolean(msg))
+    }
+
+    function showReader() {
+      uploadScreen.classList.remove('active')
+      readerScreen.classList.add('active')
+    }
+    function showUpload() {
+      stop()
+      readerScreen.classList.remove('active')
+      uploadScreen.classList.add('active')
+      showError('')
+    }
+
+    function rebuildTokens() {
+      tokens = chunkWords(words, chunkSize)
+      index = Math.min(index, Math.max(0, tokens.length - 1))
+      $('progress').max = Math.max(0, tokens.length - 1)
+      $('progress').value = index
+      renderWord()
+      updateStats()
+    }
+
+    function renderWord() {
+      const token = tokens[index] || ''
+      if (!token) {
+        wordWrap.innerHTML = '<div class="word-empty">Başlamak için oynat</div>'
+        return
+      }
+      if (chunkSize > 1 || token.includes(' ')) {
+        wordWrap.innerHTML = `<div class="word-chunk">${escapeHtml(token)}</div>`
+        return
+      }
+      const orp = getOrpIndex(token)
+      const before = token.slice(0, orp)
+      const focus = token[orp] || ''
+      const after = token.slice(orp + 1)
+      wordWrap.innerHTML = `<div class="word-rsvp"><span class="word-before">${escapeHtml(before)}</span><span class="word-orp">${escapeHtml(focus)}</span><span class="word-after">${escapeHtml(after)}</span></div>`
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+    }
+
+    function updateStats() {
+      const remaining = formatDuration((tokens.length - index - 1) / Math.max(60, wpm))
+      $('fileName').textContent = meta.fileName
+      $('fileStats').textContent = `${meta.pageCount} sayfa · ${meta.wordCount.toLocaleString('tr-TR')} kelime · ~${remaining} kaldı`
+      $('progressLeft').textContent = `${tokens.length ? index + 1 : 0} / ${tokens.length}`
+      $('progressRight').textContent = `${tokens.length ? Math.round(((index + 1) / tokens.length) * 100) : 0}%`
+      $('progress').value = index
+      $('playBtn').textContent = playing ? 'Duraklat' : 'Oynat'
+    }
+
+    function clearTimer() {
+      if (timer != null) {
+        clearTimeout(timer)
+        timer = null
+      }
+    }
+
+    function schedule() {
+      clearTimer()
+      if (!playing) return
+      const current = tokens[index]
+      if (!current) {
+        playing = false
+        updateStats()
+        return
+      }
+      timer = setTimeout(() => {
+        if (index >= tokens.length - 1) {
+          playing = false
+          updateStats()
+          return
+        }
+        index += 1
+        renderWord()
+        updateStats()
+        schedule()
+      }, intervalMs() * dwellMultiplier(current))
+    }
+
+    function play() {
+      if (!tokens.length) return
+      if (index >= tokens.length - 1) index = 0
+      playing = true
+      renderWord()
+      updateStats()
+      schedule()
+    }
+    function pause() {
+      playing = false
+      clearTimer()
+      updateStats()
+    }
+    function toggle() {
+      if (playing) pause()
+      else play()
+    }
+    function stop() {
+      pause()
+      index = 0
+    }
+    function seek(next) {
+      index = Math.max(0, Math.min(tokens.length - 1, next))
+      renderWord()
+      updateStats()
+      if (playing) schedule()
+    }
+
+    function openDocument(text, fileName, pageCount) {
+      words = tokenize(text)
+      if (!words.length) {
+        showError('Bu dosyadan okunabilir metin çıkarılamadı.')
+        return
+      }
+      meta = { fileName, pageCount, wordCount: words.length }
+      index = 0
+      playing = false
+      clearTimer()
+      rebuildTokens()
+      showReader()
+    }
+
+    async function extractPdf(file) {
+      dropzone.classList.add('loading')
+      dropLabel.textContent = 'PDF okunuyor…'
+      showError('')
+      try {
+        const pdfjs = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs')
+        pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs'
+        const data = await file.arrayBuffer()
+        const pdf = await pdfjs.getDocument({ data }).promise
+        const pages = []
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i)
+          const content = await page.getTextContent()
+          pages.push(content.items.map((item) => ('str' in item ? item.str : '')).filter(Boolean).join(' '))
+        }
+        const text = pages.join('\n\n').replace(/\u00ad/g, '').replace(/[ \t]{2,}/g, ' ').trim()
+        if (!text) throw new Error('Bu PDF’den okunabilir metin çıkarılamadı. Taranmış (görüntü) PDF olabilir.')
+        openDocument(text, file.name, pdf.numPages)
+      } catch (err) {
+        showError(err?.message || 'PDF okunamadı.')
+      } finally {
+        dropzone.classList.remove('loading')
+        dropLabel.textContent = 'PDF seç'
+      }
+    }
+
+    function acceptFile(file) {
+      if (!file) return
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        showError('Lütfen bir PDF dosyası seç.')
+        return
+      }
+      extractPdf(file)
+    }
+
+    dropzone.addEventListener('click', () => fileInput.click())
+    dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        fileInput.click()
+      }
+    })
+    fileInput.addEventListener('change', () => acceptFile(fileInput.files?.[0]))
+    ;['dragenter', 'dragover'].forEach((evt) => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault()
+        dropzone.classList.add('dragging')
+      })
+    })
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragging'))
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault()
+      dropzone.classList.remove('dragging')
+      acceptFile(e.dataTransfer.files?.[0])
+    })
+
+    $('demoBtn').addEventListener('click', () => openDocument(DEMO_TEXT, 'ornek-metin.txt', 1))
+    $('resetBtn').addEventListener('click', showUpload)
+    $('stage').addEventListener('click', toggle)
+    $('playBtn').addEventListener('click', (e) => { e.stopPropagation(); toggle() })
+    $('backBtn').addEventListener('click', () => seek(index - 10))
+    $('fwdBtn').addEventListener('click', () => seek(index + 10))
+    $('restartBtn').addEventListener('click', () => { pause(); seek(0) })
+    $('progress').addEventListener('input', (e) => seek(Number(e.target.value)))
+    $('wpm').addEventListener('input', (e) => {
+      wpm = Number(e.target.value)
+      $('wpmLabel').textContent = `${wpm} WPM`
+      updateStats()
+      if (playing) schedule()
+    })
+    $('chunk').addEventListener('input', (e) => {
+      const wasPlaying = playing
+      pause()
+      chunkSize = Number(e.target.value)
+      $('chunkLabel').textContent = `${chunkSize} kelime`
+      index = 0
+      rebuildTokens()
+      if (wasPlaying) play()
+    })
+
+    window.addEventListener('keydown', (e) => {
+      if (!readerScreen.classList.contains('active')) return
+      if (e.target instanceof HTMLInputElement) return
+      if (e.code === 'Space') { e.preventDefault(); toggle() }
+      else if (e.code === 'ArrowRight') seek(index + 5)
+      else if (e.code === 'ArrowLeft') seek(index - 5)
+      else if (e.code === 'ArrowUp') {
+        e.preventDefault()
+        wpm = Math.min(800, wpm + 20)
+        $('wpm').value = wpm
+        $('wpmLabel').textContent = `${wpm} WPM`
+        updateStats()
+        if (playing) schedule()
+      } else if (e.code === 'ArrowDown') {
+        e.preventDefault()
+        wpm = Math.max(100, wpm - 20)
+        $('wpm').value = wpm
+        $('wpmLabel').textContent = `${wpm} WPM`
+        updateStats()
+        if (playing) schedule()
+      }
+    })
+  </script>
+</body>
+</html>

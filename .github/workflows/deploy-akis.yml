@@ -1,0 +1,40 @@
+name: Deploy Akış to GitHub Pages
+
+on:
+  push:
+    branches: [main, cursor/pdf-speed-reader-7dcc]
+    paths:
+      - 'hizli-okuma/akis.html'
+      - '.github/workflows/deploy-akis.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-akis
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare site
+        run: |
+          mkdir -p _site
+          cp hizli-okuma/akis.html _site/index.html
+          cp hizli-okuma/public/favicon.svg _site/favicon.svg
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
