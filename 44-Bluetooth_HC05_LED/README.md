@@ -16,8 +16,6 @@ HC-05, Arduino projelerinde kablosuz seri haberleşme yapmamızı sağlayan pop�
     *   **TXD:** Veri Gönderme (Arduino SoftwareSerial RX - Pin 10'a bağlanır)
     *   **RXD:** Veri Alma (Arduino SoftwareSerial TX - Pin 11'e voltaj bölücüyle bağlanır)
 
-![HC-05 Modülü](./images/image_2.jpg)
-
 ---
 
 ## ⚙️ Gerekli Elemanlar
