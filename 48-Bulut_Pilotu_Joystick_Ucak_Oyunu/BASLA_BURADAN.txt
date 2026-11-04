@@ -1,0 +1,88 @@
+BULUT PİLOTU — ÖĞRENCİ REHBERİ
+Arduino Uno + 5 pinli joystick | mBlock 5 PC
+
+1. PAKETİ AÇ VE mBLOCK'U KUR
+ZIP dosyasını önce bir klasöre ayıkla. Dosyaları ZIP içinden çalıştırma.
+Resmi indirme: https://mblock.cc/pages/downloads
+mBlock PC sürümünü seç: Windows 64 bit, Mac veya Apple M1/M2.
+Kontrol edilen sürüm: 5.6.0 (4 Kasım 2026). Kurucu bu pakette yoktur.
+İlk kurulumda internet gerekebilir. Projedeki resmi Arduino Uno aygıtı ve
+Data Chart uzantısının yüklenmesini bekle; eksikse öğretmeninle ekle.
+Resmi kurulum yardımı:
+https://support.makeblock.com/hc/en-us/articles/14779090584599-Install-mBlock-5-on-Windows-and-macOS
+
+2. JOYSTICK'İ BAĞLA
+Bağlantı yaparken veya değiştirirken Arduino'nun USB kablosunu çıkar.
+Modül üzerindeki pin yazılarını izle; modüllerin pin sırası farklı olabilir.
+
+Joystick GND  -> Uno GND
+Joystick +5V  -> Uno 5V
+Joystick VRx  -> Uno A0
+Joystick VRy  -> Uno A1
+Joystick SW   -> Uno D11
+10 kΩ direnç  -> SW/D11 ortak noktası ile 5V arasına
+
+Direnç SW-D11 arasına seri konmaz; SW-D11 kablosu yerinde kalır.
+Standart breadboard örneği: SW a20, D11 b20, direncin bir bacağı c20;
+diğer bacağı Uno 5V'ye bağlı + rayına. a20-e20 aynı metal şerittir.
+Breadboard'unu kontrol et; 20 yerine başka bir ortak sıra da kullanılabilir.
+Şemalar: Baglanti_Semasi.png ve Joystick_10k_Breadboard.png.
+
+3. ÖNCE GİRİŞLERİ TEST ET
+mBlock'ta Dosya > Aç ile Joystick_Test.mblock dosyasını aç.
+Uno'yu USB veri kablosuyla bilgisayara bağla. Arduino Uno aygıtında Canlı
+(Live) modunu seç. Bağlan > Tüm bağlanabilen aygıtları göster yoluyla
+Arduino'nun COM / usbserial portunu seç. “Aygıt bağlandı” yazısını doğrula.
+Joystick'i ortada bırak ve yeşil bayrağa bas.
+Ekranda PotX (A0), PotY (A1), Buton değerleri görünür; mavi nokta hareket eder.
+Çubuğa basıp bırakınca SERBEST / BASILI göstergesinin değiştiğini kontrol et.
+
+A0/VRx ve A1/VRy: yaklaşık 512 merkez, hareket ederken 0-1023 aralığı.
+Buton: bırakılmışken 0, çubuğa basınca 1, bırakınca yeniden 0.
+Ham D11 seviyesi tersidir: bırakılmışken 1, basılıyken 0.
+Pin/jumper uçları aşağı bakarken sağ itişte A1 değeri artar.
+Oyunda A1 sağ-sol, A0 yukarı-aşağı hareketi yönetir.
+Yön tersse öğretmenine bildir; 5V ve GND'yi yer değiştirme.
+
+4. OYUNU AÇ
+Dosya > Aç ile Bulut_Pilotu.mblock dosyasını aç.
+Yeni proje açılınca USB bağlantısını yeniden kurmak gerekebilir;
+“Aygıt bağlandı” durumunu tekrar kontrol et. Canlı modda kal.
+Joystick'i serbest bırak ve yeşil bayrağa bas. Uçak hareket eder;
+joystick'i bırakınca o konumda kalır. Çubuğa basmak tek atış yapar.
+Yeni atış için bırakıp yeniden bas. Oyun bilgisayarda, USB bağlıyken çalışır.
+
+K: Arduino / klavye kontrolü. Klavyede oklar hareket, boşluk atış.
+M: Bilgisayar seslerini aç / kapat.
+V: Data Chart tablosunda PotX (A0), PotY (A1), Buton değerlerini göster.
+V yaklaşık 12 saniyede 60 örnek toplar. Kayıt sırasında V durdurup kapatır;
+kayıt bitince tablo açık kalır, V yeni kayıt başlatır.
+Yeşil bayrak: Oyunu yeniden başlatır. Başlangıç kontrolü Arduino'dur.
+Kartın yoksa yeşil bayraktan sonra K ile klavyeye geçebilirsin.
+
+OYUNUN AMACI
+Ulaşılan en yüksek puana göre: 0-199 gündüz, 200-399 gün batımı, 400+ gece.
+Puan cezası bölüm veya hızı geriletmez.
+Joystick hareket çarpanı sırasıyla 1 / 1,2 / 1,4 olur.
+Çarpmadan geçiş +10 puandır.
+Savaş uçağına isabet +20; kuşa veya yarasaya isabet -10 puandır.
+Kuşlar ve yarasalar ölmez, kaçar. Yakın çarpışma -10 puan ve -1 candır.
+3 canla başlarsın. Her yeni 200 puan eşiğinde +1 can kazanırsın;
+aynı eşiği ikinci kez geçmek yeniden can vermez. Can 0 olunca oyun biter.
+Önizleme: 3_Bolum_Onizleme.gif.
+
+ÖĞRETMEN İÇİN KISA KONTROL
+[ ] mBlock PC kuruldu; Arduino Uno ve Data Chart yüklenmiş.
+[ ] USB veri kablosu ve doğru port seçili; “Aygıt bağlandı” görünüyor.
+[ ] Devre enerjisiz kontrol edildi; SW + D11 + 10 kΩ ortak, direnç 5V'ye gidiyor.
+[ ] Joystick_Test'te iki eksen değişiyor ve Buton 0 -> 1 -> 0 oluyor.
+[ ] Oyun açılınca bağlantı tekrar kontrol edildi; öğrenci K/M/V'yi biliyor.
+
+Kart görünmüyorsa önce veri kablosunu ve portu kontrol edin. Sürücü veya
+firmware işlemini yalnız gerektiğinde, öğretmen eşliğinde resmi yönergeyle
+yapın. Her oyun açılışında Yükle moduna geçmeyin; oyun Canlı mod içindir.
+Başka bir seri monitör aynı portu kullanıyorsa kapatın.
+Mac'te yerel mBlock açılışı ve bağlantı akışı doğrulandı. Windows bilgisayarda
+gerçek test yapılmadı; dağıtımdan önce sınıf bilgisayarında deneyin.
+Bu paket, her öğrencinin joystick yönü ve düğme bağlantısının fiziksel olarak
+doğrulandığı anlamına gelmez; yukarıdaki kısa testi her devrede uygulayın.
