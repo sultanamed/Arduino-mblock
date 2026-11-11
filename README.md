@@ -6,13 +6,11 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 
 ---
 
-## ✈️ Son Arduino Çalışması: Bulut Pilotu
+## 🐦 Son Arduino Çalışması: Kanat Rotası
 
-**48. çalışma:** Arduino Uno ve joystick ile kontrol edilen üç bölümlü mBlock 5 uçak oyunu. Gündüz, gün batımı ve gece uçuşlarında kuşları koru, savaş uçaklarını durdur.
+**49. çalışma:** Masaya sabitlenen HC‑SR04 ile elini kaldırıp indirerek kuşu kemerlerin arasından geçir. Kart olmadan boşluk tuşuyla da oynanır.
 
-**[Öğrenci paketini indir (ZIP)](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu/Bulut_Pilotu_Ogrenci_Paketi.zip?raw=true)** · **[Kurulum, bağlantı şeması ve oyun](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu)**
-
-Paket; düzenlenebilir mBlock oyunu, joystick testi, bağlantı şemaları, kurulum rehberi ve hareketli önizlemeyi içerir. ZIP'i ayıklayıp `BASLA_BURADAN.html` dosyasını açın.
+**[Öğrenci paketini indir (ZIP)](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird/Kanat_Rotasi_Ogrenci_Paketi.zip?raw=true)** · **[Oyun, kurulum ve bağlantı şeması](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird)**
 
 ---
 
@@ -68,6 +66,7 @@ Paket; düzenlenebilir mBlock oyunu, joystick testi, bağlantı şemaları, kuru
 | **46** | [Bluetooth ile RGB LED Kontrolü](./46-Bluetooth_RGB_LED) | 🔴 İleri Seviye | [İncele](./46-Bluetooth_RGB_LED) |
 | **47** | [IR Kumanda ile Kapı Kontrolü](./47-IR_Kumanda_Kapi_Kontrol) | 🟡 Orta Seviye | [İncele](./47-IR_Kumanda_Kapi_Kontrol) |
 | **48** | [Bulut Pilotu — Joystick ile Uçak Oyunu](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu) | 🔴 İleri Seviye | [İncele](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu) |
+| **49** | [Kanat Rotası — Mesafe Sensörlü Flappy Bird](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird) | 🟡 Orta Seviye | [İncele](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 
