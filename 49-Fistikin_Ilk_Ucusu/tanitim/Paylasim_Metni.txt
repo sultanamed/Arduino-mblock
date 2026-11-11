@@ -1,0 +1,16 @@
+Öğrenci ve öğretmen grupları için
+
+Fıstık'ın İlk Uçuşu hazır! 🐦 Avucunu mesafe sensörünün üzerinde kaldır, küçük kuş Fıstık yükselsin. Elini indir, kemerlerin arasından geçsin. Gündüzden geceye üç rota, üç can ve her geçitte bir puan var. Beş ses de mBlock dosyasına gömülü. Arduino Uno ve HC-SR04 ile ya da bilgisayarda Boşluk tuşuyla oynayabilirsiniz.
+
+Ders ve bağlantı şeması: https://github.com/sultanamed/Arduino-mblock/tree/main/49-Fistikin_Ilk_Ucusu
+Öğrenci paketini indir: https://github.com/sultanamed/Arduino-mblock/raw/refs/heads/main/49-Fistikin_Ilk_Ucusu/Fistikin_Ilk_Ucusu_Ogrenci_Paketi.zip
+
+
+Instagram için
+
+Fıstık ilk kez uçuyor. Ona yol gösterir misin? 🐦 Elini kaldırınca yükseliyor, indirince alçalıyor. Gündüz kemerlerle başla; gün batımında kırlangıçlara, gece yarasalara dikkat et. Gece rotasında üç canla kaç puan alacaksın?
+
+Fıstık'ın İlk Uçuşu · Robotist, 49. mBlock dersi.
+Oyun + kurulum: https://github.com/sultanamed/Arduino-mblock/tree/main/49-Fistikin_Ilk_Ucusu
+
+#Arduino #mBlock #RobotikKodlama

@@ -6,13 +6,13 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 
 ---
 
-## 🐦 Son Arduino Çalışması: Kanat Rotası
+## 🐦 Son Arduino Çalışması: Fıstık'ın İlk Uçuşu
 
-[![Kanat Rotası: gündüz, gün batımı ve gece rotalarında sensörle uçuş](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird/tanitim/Kanat_Rotasi_Afis.png)](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird)
+[![Fıstık'ın İlk Uçuşu: gündüz, gün batımı ve gece rotalarında sensörle uçuş](./49-Fistikin_Ilk_Ucusu/tanitim/Fistikin_Ilk_Ucusu_Afis.png)](./49-Fistikin_Ilk_Ucusu)
 
-**49. derste kumanda avucun.** Elini HC-SR04 sensörünün üzerinde kaldırınca kuş yükselir, indirince alçalır. Gündüz, gün batımı veya gece rotasını seç; üç canla kemerlerin arasından geç. Her geçiş bir puan kazandırır ve oyun hızlanır. Öğrenciler Arduino Uno ile sensörü bağlayabilir ya da kart olmadan **Boşluk** tuşuyla oynayabilir.
+**Fıstık ilk kez uçuyor.** Avucunu mesafe sensörünün üzerinde kaldırınca küçük kuş yükselir, indirince alçalır. Gündüz, gün batımı veya gece rotasını seç; üç canla kemerlerin arasından geç. Her kemerde puan zili çalar; puanın arttıkça geçitler hızlanır. Öğrenciler Arduino Uno ile sensörü bağlayabilir ya da kart olmadan **Boşluk** tuşuyla oynayabilir.
 
-**[Öğrenci paketini indir (ZIP)](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird/Kanat_Rotasi_Ogrenci_Paketi.zip?raw=true)** · **[Oyun, kurulum ve bağlantı şeması](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird)**
+**[Öğrenci paketini indir (ZIP)](./49-Fistikin_Ilk_Ucusu/Fistikin_Ilk_Ucusu_Ogrenci_Paketi.zip?raw=true)** · **[Oyun, kurulum ve bağlantı şeması](./49-Fistikin_Ilk_Ucusu)**
 
 ---
 
@@ -68,7 +68,7 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 | **46** | [Bluetooth ile RGB LED Kontrolü](./46-Bluetooth_RGB_LED) | 🔴 İleri Seviye | [İncele](./46-Bluetooth_RGB_LED) |
 | **47** | [IR Kumanda ile Kapı Kontrolü](./47-IR_Kumanda_Kapi_Kontrol) | 🟡 Orta Seviye | [İncele](./47-IR_Kumanda_Kapi_Kontrol) |
 | **48** | [Bulut Pilotu — Joystick ile Uçak Oyunu](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu) | 🔴 İleri Seviye | [İncele](./48-Bulut_Pilotu_Joystick_Ucak_Oyunu) |
-| **49** | [Kanat Rotası — Mesafe Sensörlü Flappy Bird](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird) | 🟡 Orta Seviye | [İncele](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird) |
+| **49** | [Fıstık'ın İlk Uçuşu — Mesafe Sensörlü Kuş Oyunu](./49-Fistikin_Ilk_Ucusu) | 🟡 Orta Seviye | [İncele](./49-Fistikin_Ilk_Ucusu) |
 
 *Yeni dersler düzenli olarak eklenecektir!* 🎛️
 

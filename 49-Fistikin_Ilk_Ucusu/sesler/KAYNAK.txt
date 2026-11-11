@@ -1,0 +1,15 @@
+FISTIK'IN İLK UÇUŞU · BEŞ SES EFEKTİ
+
+Ses performansı: Josh Harmon (@joshplaysdrums)
+Kaynak video: https://www.tiktok.com/@joshplaysdrums/video/7044276412471266607
+
+Bu videodan alınan beş kısa kesit Fıstık'ın İlk Uçuşu oyunu için izinle kullanılmıştır.
+01_Kanat.wav  — Kanat vuruşu
+02_Puan.wav   — İki notalı puan zili
+03_Carpma.wav — Çarpma
+04_Dusus.wav  — Alçalan düşüş ıslığı
+05_Bitis.wav  — Kapanış vuruşu
+
+WAV biçimi: 22.050 Hz, 16 bit PCM, mono.
+Bu efektler öğrenci paketindeki Fıstık'ın İlk Uçuşu.mblock projesine gömülüdür.
+Oyunu açmak için WAV dosyalarını ayrıca indirmen veya içe aktarman gerekmez.
