@@ -1,18 +1,28 @@
 # Kanat Rotası — Mesafe Sensörlü Flappy Bird
 
+![Kanat Rotası afişi: avucunun yüksekliğiyle kuşu üç farklı rotada uçur](tanitim/Kanat_Rotasi_Afis.png)
+
 **[Öğrenci paketini indir (ZIP)](Kanat_Rotasi_Ogrenci_Paketi.zip?raw=true)** · [Yalnızca mBlock projesini indir](Kanat_Rotasi.mblock?raw=true)
 
-Kuşu kıyıdaki kemerlerin arasından geçir. Arduino Uno ve HC-SR04 mesafe sensörüyle **elini yükseltince kuş yükselir, indirince alçalır**. Kart olmadan klavyeyle de oynayabilirsin.
+**Avucunu kaldır, kuş yükselsin; indir, kemerin arasından geçsin.** Bu mBlock dersinde Arduino Uno ve HC-SR04 ile ölçtüğün mesafenin ekranda nasıl harekete dönüştüğünü görebilirsin. Gündüz, gün batımı ve gece rotalarında üç canın var. Her kemerden geçiş bir puan kazandırır. Kartın yoksa aynı oyunu klavyeyle oynayabilirsin.
 
 ![Kanat Rotası oyunundan sessiz bir örnek tur](Oynanis.gif)
 
 ## Klavyeyle başla
 
 1. ZIP’i bir klasöre çıkar. [mBlock 5 masaüstü uygulamasında](https://mblock.cc/pages/downloads) **Dosya → Bilgisayarınızdan aç** ile `Kanat_Rotasi.mblock` dosyasını seç.
-2. **Yeşil bayrağa** tıkla, ardından **Boşluk** tuşuna bas. Her kanat çırpışı için tuşu bırakıp tekrar bas.
-3. **Üç canla** başlarsın. Kemere, zemine veya üst sınıra çarpınca bir kalp söner. Üçüncü çarpışmada tur biter. Yeni tur için **Boşluk**, sensörle başlamak için **S**.
+2. **Yeşil bayrağa** tıkla. **1 / 2 / 3** ile veya ekrandaki rota kutusuna tıklayarak bölüm seç, ardından **Boşluk** tuşuna bas. Her kanat çırpışı için tuşu bırakıp tekrar bas.
+3. **Üç canla** başlarsın. Kemere, zemine, üst sınıra veya karşıdan gelen bir hayvana çarpınca bir kalp söner. Üçüncü çarpışmada tur biter. Yeni tur için **Boşluk**, sensörle başlamak için **S**.
 
-**Ses:** Uçuşta yumuşak kanat hışırtısı, çarpışmada kısa bir vuruş bilgisayardan duyulur. **M** ile sesleri kapatıp açabilirsin. Arduino’ya hoparlör bağlamak gerekmez; GIF önizlemesi sessizdir.
+| Bölüm | Rotada ne var? |
+| --- | --- |
+| **1 · Gündüz** | Kıyı boyunca sakin başlar. İlerleyince karşıdan kuşlar gelir. |
+| **2 · Gün batımı** | Daha hızlı başlar; kuşlarla daha erken karşılaşırsın. |
+| **3 · Gece** | En hızlı rotadır. Kuşların yanında, daha yavaş uçan yarasalara da rastlarsın. |
+
+**Her üç bölümde de puan arttıkça geçitler hızlanır; her rotanın bir üst hız sınırı vardır.** Bitişte 1, 2 veya 3 ile yeni rota seçebilirsin. Elini sensöre yaklaştırmak kuşu alçaltır; geçitlerin hızı puana bağlıdır.
+
+**Ses:** Elin belirgin biçimde yukarı veya aşağı harekete geçtiğinde tek bir kanat sesi duyulur. Elini sabit tutarsan kanat sesi tekrarlanmaz. Klavyede ses yeni bir kanat vuruşuyla çalar; çarpışınca bir kez kısa bir “boing” duyulur. Sağ üstteki **Ses açık / Ses kapalı** düğmesi veya **M** iki sesi birlikte açıp kapatır; yeni turda tercihin korunur. Arduino’ya hoparlör bağlamak gerekmez; GIF önizlemesi sessizdir.
 
 ## Sensörle oyna
 
@@ -32,10 +42,12 @@ Bağlantıları yaparken Uno’nun USB kablosunu çıkar. **Dört pinli HC-SR04*
 1. Sensörün iki yuvarlak yüzü yukarı bakacak şekilde yerleştir. Uno’yu USB **veri** kablosuyla bilgisayara bağla.
 2. mBlock’ta **Aygıtlar → Arduino Uno → Yükle** modunu seç. **Bağlan** ile doğru USB/COM portunu seç. Projedeki **Upload Mode Broadcast** uzantılarının yüklenmesini bekle; ilk kurulum internet isteyebilir.
 3. Uno seçiliyken **Yükle** düğmesine bas ve başarı mesajını bekle. Bu işlem karttaki önceki programı değiştirir. Program kartta kaldığı sürece **her turda yeniden yükleme gerekmez**. USB bağlı, mBlock Yükle modunda kalsın.
-4. **Yeşil bayrak → S** ile başlat. Avucunu sensörün yaklaşık **6–32 cm** üzerinde düz tut. Ölçüm gelmezse oyun bekler; **Boşluk** ile klavyeye geçebilirsin.
+4. **Yeşil bayrak → 1, 2 veya 3 → S** ile başlat. Avucunu sensörün yaklaşık **6–32 cm** üzerinde düz tut. Ölçüm gelmezse oyun bekler; **Boşluk** ile klavyeye geçebilirsin.
 
 **Ani ölçümleri gözlemek için:** `D` ile ham ve süzülmüş mesafeleri açıp kapatın. Oyun son üç geçerli örneğin ortancasını kullanır; tek aykırı ölçüm kuşu zıplatmaz.
 
 **Öğretmen notu:** Öğrencilerden 6–32 cm aralığının ortasını bulmalarını ve ellerini bu yükseklikte tutunca kuşun nerede duracağını tahmin etmelerini isteyin.
 
-**Donanım denemesi:** Arduino Uno ve HC-SR04 ile D3/D2 üzerinden 416 gerçek ölçüm kaydedildi. mBlock 5.6 masaüstünde sensör modunda ham mesafe ve süzülmüş el yüksekliği ekranda değişti; kuşla puan alındı. Kendi düzeneğinizde aynı kontrolü **D** ile yapabilirsiniz.
+Sınıfınızla paylaşmak için: [Afişi indir (PNG)](tanitim/Kanat_Rotasi_Afis.png?raw=true) · [Tanıtım videosunu indir (MP4)](tanitim/Kanat_Rotasi_Tanitim.mp4?raw=true) · [Kısa paylaşım metinleri](tanitim/Paylasim_Metni.txt)
+
+**Donanım denemesi:** Arduino Uno ve HC-SR04 ile D3/D2 üzerinden 416 gerçek ölçüm kaydedildi. Üç bölümlü sürüm mBlock 5.6 masaüstünde bağlı Uno ile oynandı. Ham mesafe ve süzülmüş el yüksekliği ekranda değişirken puan 5’ten 7’ye çıktı. Kendi düzeneğinizde aynı kontrolü **D** ile yapabilirsiniz.

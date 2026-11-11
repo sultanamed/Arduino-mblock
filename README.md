@@ -8,7 +8,9 @@ Her ders; konu anlatımı, devre şeması (Tinkercad/Görsel), Arduino C/C++ kod
 
 ## 🐦 Son Arduino Çalışması: Kanat Rotası
 
-**49. çalışma:** Masaya sabitlenen HC‑SR04 ile elini kaldırıp indirerek kuşu kemerlerin arasından geçir. Kart olmadan boşluk tuşuyla da oynanır.
+[![Kanat Rotası: gündüz, gün batımı ve gece rotalarında sensörle uçuş](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird/tanitim/Kanat_Rotasi_Afis.png)](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird)
+
+**49. derste kumanda avucun.** Elini HC-SR04 sensörünün üzerinde kaldırınca kuş yükselir, indirince alçalır. Gündüz, gün batımı veya gece rotasını seç; üç canla kemerlerin arasından geç. Her geçiş bir puan kazandırır ve oyun hızlanır. Öğrenciler Arduino Uno ile sensörü bağlayabilir ya da kart olmadan **Boşluk** tuşuyla oynayabilir.
 
 **[Öğrenci paketini indir (ZIP)](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird/Kanat_Rotasi_Ogrenci_Paketi.zip?raw=true)** · **[Oyun, kurulum ve bağlantı şeması](./49-Kanat_Rotasi_Mesafe_Sensorlu_Flappy_Bird)**
 
